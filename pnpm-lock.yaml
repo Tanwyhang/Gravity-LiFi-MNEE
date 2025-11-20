@@ -23,6 +23,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.90.10
         version: 5.90.10(react@19.2.0)
+      '@web3icons/react':
+        specifier: ^4.0.38
+        version: 4.0.38(react@19.2.0)(typescript@5.9.3)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -947,6 +950,16 @@ packages:
         optional: true
       typescript:
         optional: true
+
+  '@web3icons/common@0.11.29':
+    resolution: {integrity: sha512-LYES+rOCiMgP7D4XwkOpuv8GoNWDtJcO2v/rYhUDYU1pO2ZBTN9UdzzXkOZpTuRibeoMYVTt6Lq3wZLIspC7sg==}
+    peerDependencies:
+      typescript: ^5.0.0
+
+  '@web3icons/react@4.0.38':
+    resolution: {integrity: sha512-AnkLz7mhy5QJ+kHqLXCPDmVNYCfPaL5qtaKcUSIpHIeQo3flGD/67NtjcJzVKlKn36sLp44O+1aZyqD2Ukb82w==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
 
   abitype@1.1.0:
     resolution: {integrity: sha512-6Vh4HcRxNMLA0puzPjM5GBgT4aAcFGKZzSgAXvuZ27shJP6NEpielTuqbBmZILR5/xd0PizkBGy5hReKz9jl5A==}
@@ -3463,6 +3476,17 @@ snapshots:
       - immer
       - react
       - use-sync-external-store
+
+  '@web3icons/common@0.11.29(typescript@5.9.3)':
+    dependencies:
+      typescript: 5.9.3
+
+  '@web3icons/react@4.0.38(react@19.2.0)(typescript@5.9.3)':
+    dependencies:
+      '@web3icons/common': 0.11.29(typescript@5.9.3)
+      react: 19.2.0
+    transitivePeerDependencies:
+      - typescript
 
   abitype@1.1.0(typescript@5.9.3)(zod@4.1.12):
     optionalDependencies:
