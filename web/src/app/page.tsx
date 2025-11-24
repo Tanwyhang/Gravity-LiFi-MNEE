@@ -95,7 +95,7 @@ export default function Home() {
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2 text-lg font-bold">
             <Terminal className="h-5 w-5" />
-            <span>GRAVITY-ERC20-PAYMENT</span>
+            <span>GRAVITY-x402-PAYMENT</span>
           </div>
           <nav className="hidden md:flex gap-12 text-sm ml-auto mr-12">
             <Link href="/dashboard" className="hover:underline decoration-2 underline-offset-4 font-bold text-primary">./dashboard</Link>
@@ -127,8 +127,11 @@ export default function Home() {
                   priority
                 />
               </div>
+              <p className="text-sm font-mono justify-center max-w-2xl px-4">
+                Web2-to-Web3 Bridge for Frictionless ERC20 Payments via MNEE as Familiar Social Links / QR
+              </p>
               <p className="text-muted-foreground text-sm font-mono justify-center max-w-2xl px-4">
-                Pulling everything together
+                GRAVITY uses x402 liquidity meshes with our AI assisted BFS routing protocol and deterministic payment rails
               </p>
             </div>
             
@@ -138,11 +141,11 @@ export default function Home() {
               <motion.div whileHover={isConnected ? { scale: 1.05 } : {}} whileTap={isConnected ? { scale: 0.95 } : {}}>
                 {isConnected ? (
                   <Link href="/create" className="bg-foreground text-background px-8 py-3 text-sm font-bold hover:bg-foreground/90 transition-colors inline-block text-center shadow-lg hover:shadow-xl">
-                    [ CREATE ]
+                    [ LAUNCH_KERNEL ]
                   </Link>
                 ) : (
                   <button disabled className="bg-foreground/50 text-background/50 px-8 py-3 text-sm font-bold cursor-not-allowed inline-block text-center shadow-none">
-                    [ CREATE ]
+                    [ LAUNCH_KERNEL ]
                   </button>
                 )}
               </motion.div>
@@ -151,12 +154,12 @@ export default function Home() {
                 whileTap={{ scale: 0.95 }}
                 className="border border-border px-8 py-3 text-sm font-bold hover:bg-muted/50 transition-colors shadow-sm hover:shadow-md bg-background"
               >
-                [ WHITEPAPER ]
+                [ TECH_SPEC_402 ]
               </motion.button>
             </div>
 
             {/* Crypto Partnerships Marquee */}
-            <h4 className="text-sm font-mono text-muted-foreground mb-8 tracking-widest uppercase mt-12 text-center">[ SUPPORTED_ECOSYSTEMS ]</h4>
+            <h4 className="text-sm font-mono text-muted-foreground mb-8 tracking-widest uppercase mt-12 text-center">[ SUPPORTED_ECOSYSTEMS::X402 ]</h4>
             <div className="w-full mb-12 relative overflow-hidden -mx-4">
               <div className="relative flex w-full overflow-hidden bg-muted/20 rounded-xl py-8">
                 <div className="flex w-max animate-marquee gap-6 hover:[animation-play-state:paused] items-center">
@@ -187,6 +190,23 @@ export default function Home() {
 
             {/* Payment Modal Mockups */}
             <div ref={containerRef} className="relative w-full py-12">
+              {/* Background Image with Feather Fades */}
+              <div className="absolute inset-0 z-0">
+                <div className="relative h-full">
+                  <Image
+                    src="/Memes/bg_white.jpeg"
+                    alt="Background"
+                    fill
+                    className="bottom-100 object-cover contrast-400 saturate-70"
+                    style={{ objectPosition: 'center' }}
+                  />
+                  {/* White feather fade overlays */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-white via-white/20 to-white" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-white via-white/15 to-transparent opacity-90" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white opacity-70" />
+                </div>
+              </div>
+
               {/* Floating Shapes */}
               <motion.div style={{ y: y1 }} className="absolute -left-20 -top-20 z-10 w-[500px] h-[500px] pointer-events-none opacity-90 hidden lg:block backdrop-invert bg-white/30 brightness-125 [mask-image:url(/shapecylinder.png)] [mask-size:contain] [mask-repeat:no-repeat] [mask-position:center]">
                   <Image src="/shapecylinder.png" alt="" fill className="object-contain opacity-60" />
@@ -201,7 +221,7 @@ export default function Home() {
                   <Image src="/shapespring.png" alt="" fill className="object-contain opacity-60" />
               </motion.div>
 
-              <h4 className="text-sm font-mono text-muted-foreground mb-8 tracking-widest uppercase text-center relative z-20">[ PAYMENT_MODALS ]</h4>
+              <h4 className="text-sm font-mono text-muted-foreground mb-8 tracking-widest uppercase text-center relative z-20">[ X402_PAYMENT_KERNELS ]</h4>
               
               {/* Row 1: 3 Modals with Thumbnail */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-7xl mx-auto mb-12 z-20 mt-6 relative px-4">
@@ -219,13 +239,13 @@ export default function Home() {
               </div>
 
               {/* Demo Payment QR Code */}
-              <div className="flex flex-col items-center justify-center w-full mb-20 z-20 relative">
+              <div className="flex flex-col items-center justify-center w-full mt-20 z-20 relative">
                 <h4 className="text-sm font-mono text-muted-foreground mb-8 tracking-widest uppercase text-center">[ SCAN_TO_PAY_DEMO ]</h4>
                 <motion.div 
                   className="p-4 bg-white rounded-xl shadow-lg border-2"
                   animate={{ 
                     borderColor: ["rgba(0,0,0,0.05)", "rgba(236, 72, 153, 0.5)", "rgba(0,0,0,0.05)"],
-                    boxShadow: ["0 10px 15px -3px rgba(0, 0, 0, 0.1)", "0 0 25px 5px rgba(236, 72, 153, 0.4)", "0 10px 15px -3px rgba(0, 0, 0, 0.1)"]
+                    boxShadow: ["0 10px 15px -10px rgba(0, 0, 0, 0.1)", "0 0 25px 5px rgba(236, 72, 153, 0.4)", "0 10px 15px -3px rgba(0, 0, 0, 0.1)"]
                   }}
                   transition={{ 
                     duration: 3, 
@@ -243,12 +263,12 @@ export default function Home() {
                     />
                   </div>
                 </motion.div>
-                <p className="mt-4 text-sm text-muted-foreground font-mono">Scan to experience the payment flow</p>
+                <p className="mt-4 text-sm text-muted-foreground font-mono">Scan to spin up an x402 demo payment stream</p>
               </div>
             </div>
 
             {/* Floating App Mockup */}
-            <h4 className="text-sm font-mono text-muted-foreground mb-8 tracking-widest uppercase mt-20 text-center">[ DASHBOARD_VIEW ]</h4>
+            <h4 className="text-sm font-mono text-muted-foreground mb-8 tracking-widest uppercase mt-20 text-center">[ CREATOR's CONSOLE ]</h4>
             <div className="relative w-full max-w-5xl mx-auto mb-20 px-4 [perspective:2000px]">
               <div className="relative rounded-xl border border-border bg-card/50 backdrop-blur-xl p-2 shadow-2xl transition-all duration-1000 ease-out hover:[transform:rotateX(0deg)] [transform:rotateX(20deg)] group">
                 <div className="rounded-lg border border-border bg-background/80 p-4 h-[400px] overflow-hidden relative">
@@ -261,7 +281,7 @@ export default function Home() {
                       <div className="w-3 h-3 rounded-full bg-yellow-500/20" />
                       <div className="w-3 h-3 rounded-full bg-green-500/20" />
                     </div>
-                    <div className="text-xs font-mono text-muted-foreground">GRAVITY_DASHBOARD</div>
+                    <div className="text-xs font-mono text-muted-foreground">GRAVITY_x402_TELEMETRY</div>
                   </div>
 
                   {/* Mockup Content */}
@@ -293,11 +313,11 @@ export default function Home() {
                 </div>
               </div>
               {/* Reflection/Glow */}
-              <div className="absolute -inset-4 bg-gradient-to-t from-primary/20 to-transparent blur-3xl -z-10 opacity-30" />
+              <div className="absolute -inset-4 bg-gradient-to-t from-primary/20 to-transparent blur-3xl -z-10 opacity-20" />
             </div>
 
             {/* Payment Flow Animations */}
-            <h4 className="text-sm font-mono text-muted-foreground mb-24 tracking-widest uppercase mt-12 text-center">[ PAYMENT_FLOWS ]</h4>
+            <h4 className="text-sm font-mono text-muted-foreground mb-24 tracking-widest uppercase mt-12 text-center">[ ROUTING_SIMULATION ]</h4>
             <div className="grid md:grid-cols-2 gap-8 w-full max-w-5xl mx-auto mb-24 z-20 px-4 items-center">
                <div className="flex flex-col items-center">
                  <QrScanAnimation />
@@ -310,26 +330,28 @@ export default function Home() {
         
 
         {/* Features Grid */}
+
         <section id="features" className="mb-20 space-y-8 relative z-10 bg-background">
+
           <div className="border-b border-border pb-2 container mx-auto px-4 text-center">
-            <h2 className="text-xl font-bold">SYSTEM_MODULES</h2>
+            <h2 className="text-xl font-bold">SYSTEM_MODULES::X402</h2>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8 container mx-auto px-4">
             {[
               {
                 title: "UNIVERSAL_PAYMENT",
-                desc: "Accept USDC, USDT, DAI, or any ERC20. Automatic Uniswap conversion to your preferred settlement token.",
+                desc: "Execute multi-asset clears across the x402 settlement fabric with AI assisted BFS routing protocol optimizing every hop in real time.",
                 icon: CreditCard
               },
               {
                 title: "QR_VERIFICATION",
-                desc: "Cryptographically signed receipts generated as QR codes. Instant offline verification for events.",
+                desc: "Generate zk anchored telemetry packets that compile into post-quantum QR attestations even in air-gapped venues.",
                 icon: QrCode
               },
               {
                 title: "ZERO_CONFIG",
-                desc: "No backend required. Fully decentralized architecture running on Ethereum Sepolia.",
+                desc: "Self-provisioning edge nodes boot with deterministic WASM bundles—no backend, just autonomous x402 orchestration on Ethereum Sepolia.",
                 icon: Zap
               }
             ].map((feature, i) => (
@@ -349,14 +371,155 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Global Payment Benefits - New Design */}
+
+        {/* Header with stats */}
+            <div className="text-center">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-black/10 to-black/5 border border-black/20 rounded-full mb-6">
+                <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse" />
+                <span className="text-sm font-mono text-black font-bold">LIVE IN 180+ COUNTRIES</span>
+              </div>
+
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">
+                The Future of
+                <br />
+                <span className="text-blue-600">Global Payments</span>
+              </h2>
+
+              <p className="text-xl text-black/80 max-w-3xl mx-auto leading-relaxed font-bold">
+                Accept stablecoins worldwide with instant settlement, lower fees, and zero regulatory complexity
+              </p>
+            </div>
+
+        <section className="relative mb-20 overflow-hidden">
+
+          
+          {/* Background */}
+          <div className="absolute inset-0 bg-[url('/Memes/bg_blue.jpeg')] bg-cover bg-center contrast-400 opacity-70" />
+          <div className="absolute inset-0 bg-blue-500/20" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.2),_transparent_70%)]" />
+
+          {/* Top feather fade */}
+          <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white via-white/30 to-transparent pointer-events-none" />
+
+          {/* Bottom feather fade */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white/30 to-transparent pointer-events-none" />
+
+          <div className="relative z-10 container mx-auto px-4 py-20">
+
+            {/* Main benefit grid without icons */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+              {[
+                {
+                  title: "Global Reach",
+                  subtitle: "180+ Countries",
+                  desc: "Accept payments from customers worldwide without borders or restrictions"
+                },
+                {
+                  title: "Instant Settlement",
+                  subtitle: "No T+2 Delays",
+                  desc: "Receive funds immediately instead of waiting days for traditional banking"
+                },
+                {
+                  title: "Lower Fees",
+                  subtitle: "Save 80% vs Cards",
+                  desc: "Drastically reduce processing costs compared to traditional payment methods"
+                },
+                {
+                  title: "Stable Value",
+                  subtitle: "Always USD",
+                  desc: "Never worry about crypto volatility with fully USD-pegged stablecoins"
+                },
+                {
+                  title: "Clean Treasury",
+                  subtitle: "One Ledger",
+                  desc: "Simplify financial management with unified asset tracking"
+                },
+                {
+                  title: "Compliance Free",
+                  subtitle: "GENIUS Act Protected",
+                  desc: "Operate worry-free under regulatory protection—we handle the complexity"
+                }
+              ].map((benefit, i) => (
+                <div key={i} className="relative">
+                  {/* Card */}
+                  <div className="p-8 bg-white backdrop-blur-sm">
+                    {/* Content */}
+                    <h3 className="text-xl font-bold mb-2 text-black">{benefit.title}</h3>
+                    <p className="text-blue-600 font-mono text-sm mb-3 font-bold">{benefit.subtitle}</p>
+                    <p className="text-black/70 leading-relaxed font-bold">{benefit.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Bottom CTA section */}
+            <div className="text-center space-y-8">
+              {/* Value props in pill format */}
+              <div className="flex flex-wrap justify-center gap-3">
+                {[
+                  "Zero Volatility Risk",
+                  "Instant Cash Flow",
+                  "80% Lower Fees",
+                  "Borderless Payments",
+                  "GENIUS Act Compliant"
+                ].map((prop, i) => (
+                  <div key={i} className="px-4 py-2 bg-white border border-black/20 rounded-xl text-sm font-mono text-black font-bold">
+                    {prop}
+                  </div>
+                ))}
+              </div>
+
+              {/* Main CTA */}
+              <div className="relative group overflow-hidden border border-white/20 p-12 max-w-4xl mx-auto bg-black/30 backdrop-blur-2xl shadow-2xl">
+                {/* Animated gradient border/glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-blue-400/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                <div className="relative z-10 flex flex-col items-center text-center">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 mb-6 backdrop-blur-sm">
+                    <Terminal className="h-4 w-4" />
+                    <span className="text-xs font-mono font-bold tracking-wider">READY_TO_INTEGRATE::X402</span>
+                  </div>
+                  
+                  <h3 className="text-3xl md:text-4xl font-bold mb-4 text-white tracking-tight">
+                    Initialize Payment Link
+                  </h3>
+                  
+                  <p className="text-lg text-white mb-8 max-w-2xl font-medium leading-relaxed">
+                    Deploy from template. Zero config required.
+                  </p>
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                    <button className="group/btn relative px-8 py-4 bg-black text-white rounded-xl font-bold overflow-hidden transition-all hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-500 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
+                      <span className="relative flex items-center gap-2">
+                        [ LAUNCH_MAINNET ]
+                        <Zap className="w-4 h-4" />
+                      </span>
+                    </button>
+                    
+                    <button className="px-8 py-4 bg-white/50 border border-white/40 text-black rounded-xl font-bold hover:bg-white/80 transition-all hover:scale-105 backdrop-blur-sm flex items-center gap-2">
+                      <span>READ_DOCS.md</span>
+                      <ExternalLink className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        
+
         {/* Marquee Testimonials */}
         <section id="testimonials" className="space-y-8 overflow-hidden relative z-10 mb-20 bg-background">
           <div className="border-b border-border pb-2 container mx-auto px-4 text-center">
-            <h2 className="text-xl font-bold">COMMUNITY_FEEDBACK</h2>
+            <h2 className="text-xl font-bold">COMMUNITY_FEEDBACK(LOGS)</h2>
           </div>
           
           <div className="relative flex w-full overflow-hidden bg-background/50 py-10">
             <div className="flex w-max animate-marquee gap-8 hover:[animation-play-state:paused]">
+              
               {[...Array(2)].map((_, setIndex) => (
                 <div key={setIndex} className="flex shrink-0 gap-8">
                   {[
@@ -364,31 +527,31 @@ export default function Home() {
                       name: "Satoshi Chen",
                       username: "@satoshi_eth",
                       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=1",
-                      review: "Finally, a payment system that actually works for crypto events. No more gas headaches!"
+                      review: "Our validator pods stay green because x402 flows auto-balance gas lanes—zero manual tuning required."
                     },
                     {
                       name: "Maria Rodriguez",
                       username: "@maria_defi",
                       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=2",
-                      review: "The QR verification is incredible - scanned tickets instantly even with no internet connection."
+                      review: "QR attestations compile instantly from the AI assisted BFS routing protocol even when the venue uplink drops."
                     },
                     {
                       name: "James Wilson",
                       username: "@jweb3_dev",
                       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=3",
-                      review: "Zero config setup saved us weeks of development time. Just plug and play!"
+                      review: "Bootstrapped a net-new merchant stack in minutes—zero-config WASM bundles handshake with our mesh out of the box."
                     },
                     {
                       name: "Aisha Patel",
                       username: "@aisha_crypto",
                       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=4",
-                      review: "Accepting any ERC20 token while getting USDC back? Game changer for our conference."
+                      review: "Multi-token intakes settle back to USDC automatically; the x402 bridge fuses every hop without slippage."
                     },
                     {
                       name: "Kai Nakamura",
                       username: "@kai_nft",
                       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=5",
-                      review: "The receipt system is verifiable and cryptographically secure. No more disputes!"
+                      review: "Receipts ship with zk proofs plus x402 telemetry hashes—disputes evaporated across our whole fleet."
                     }
                   ].map((testimonial, i) => (
                     <div key={`${setIndex}-${i}`} className="w-[300px] border border-border bg-card p-6 space-y-4 hover:border-foreground/50 transition-colors">

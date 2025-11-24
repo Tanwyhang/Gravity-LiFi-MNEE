@@ -1,6 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Turbopack configuration (Next.js 16+)
+  turbopack: {
+    // Empty turbopack config to silence the warning
+    // Your webpack config will be used as fallback
+  },
+
+  // Webpack configuration (fallback for legacy compatibility)
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Exclude server-only packages from client bundle
