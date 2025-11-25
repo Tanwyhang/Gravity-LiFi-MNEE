@@ -1,8 +1,8 @@
 'use client';
 
 import { formatHex, oklch } from 'culori';
-import QR from 'qrcode';
-import { type HTMLAttributes, useEffect, useState } from 'react';
+import QRCode from 'react-fancy-qrcode';
+import { type HTMLAttributes, useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 export type QRCodeProps = HTMLAttributes<HTMLDivElement> & {
@@ -10,6 +10,15 @@ export type QRCodeProps = HTMLAttributes<HTMLDivElement> & {
   foreground?: string;
   background?: string;
   robustness?: 'L' | 'M' | 'Q' | 'H';
+  size?: number;
+  logo?: string | { uri: string };
+  logoSize?: number;
+  dotScale?: number;
+  dotRadius?: number | string;
+  positionRadius?: number | string | any[];
+  positionColor?: string;
+  colorGradientDirection?: [string, string, string, string];
+  positionGradientDirection?: [string, string, string, string];
 };
 
 const oklchRegex = /oklch\(([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\)/;
@@ -28,18 +37,28 @@ const getOklch = (color: string, fallback: [number, number, number]) => {
   };
 };
 
-export const QRCode = ({
+export const QRCodeComponent = ({
   data,
   foreground,
   background,
-  robustness = 'M',
+  robustness = 'L',
+  size: initialSize = 100,
   className,
+  logoSize,
+  dotScale = 0.7,
+  dotRadius = 2,
+  positionRadius = 4,
+  positionColor,
+  colorGradientDirection,
+  positionGradientDirection,
   ...props
 }: QRCodeProps) => {
-  const [svg, setSVG] = useState<string | null>(null);
+  const [colors, setColors] = useState({ fg: '#000000', bg: '#ffffff' });
+  const [size, setSize] = useState(initialSize);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const generateQR = async () => {
+    const resolveColors = () => {
       try {
         const styles = getComputedStyle(document.documentElement);
         const foregroundColor =
@@ -53,36 +72,58 @@ export const QRCode = ({
         );
         const backgroundOklch = getOklch(backgroundColor, [0.985, 0, 0]);
 
-        const newSvg = await QR.toString(data, {
-          type: 'svg',
-          color: {
-            dark: formatHex(oklch({ mode: 'oklch', ...foregroundOklch })),
-            light: formatHex(oklch({ mode: 'oklch', ...backgroundOklch })),
-          },
-          width: 200,
-          errorCorrectionLevel: robustness,
-          margin: 0,
+        setColors({
+          fg: formatHex(oklch({ mode: 'oklch', ...foregroundOklch })) || '#000000',
+          bg: formatHex(oklch({ mode: 'oklch', ...backgroundOklch })) || '#ffffff',
         });
-
-        setSVG(newSvg);
       } catch (err) {
         console.error(err);
       }
     };
 
-    generateQR();
-  }, [data, foreground, background, robustness]);
+    resolveColors();
+  }, [foreground, background]);
 
-  if (!svg) {
-    return null;
-  }
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      if (entries[0]) {
+        const { width } = entries[0].contentRect;
+        // Only update size if it's significantly different to avoid loops/jitters
+        // and ensure we have a valid width
+        if (width > 0 && Math.abs(width - size) > 5) {
+             setSize(width);
+        }
+      }
+    });
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+    return () => observer.disconnect();
+  }, [size]);
 
   return (
     <div
-      className={cn('size-full', '[&_svg]:size-full', className)}
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: "Required for SVG"
-      dangerouslySetInnerHTML={{ __html: svg }}
+      ref={containerRef}
+      className={cn('size-full flex items-center justify-center', className)}
       {...props}
-    />
+    >
+      <QRCode
+        value={data}
+        size={size}
+        backgroundColor={colors.bg}
+        color={colors.fg}
+        errorCorrection={robustness}
+        logoSize={logoSize}
+        dotScale={dotScale}
+        dotRadius={dotRadius}
+        positionRadius={positionRadius}
+        positionColor={positionColor}
+        colorGradientDirection={colorGradientDirection}
+        positionGradientDirection={positionGradientDirection}
+      />
+    </div>
   );
 };
+
+// Export as QRCode to maintain compatibility with imports
+export { QRCodeComponent as QRCode };

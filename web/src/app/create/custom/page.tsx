@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo, useRef, useEffect } from "react"
 import { useAccount } from "wagmi"
-import { Upload, Eye, ArrowLeft, Copy, Download } from "lucide-react"
+import { Upload, Eye, ArrowLeft, Copy, Download, X } from "lucide-react"
 import { Spinner } from "@/components/ui/shadcn-io/spinner"
 import { Slider } from "@/components/ui/slider"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
@@ -201,28 +201,30 @@ export default function CustomThumbnailPage() {
 
   const handleGenerateLink = useCallback(() => {
     const uniqueId = Math.random().toString(36).substring(2, 9)
+    // Use shorter param names to reduce QR code complexity
     const params = new URLSearchParams({
-      primaryColor: config.primaryColor,
-      backgroundColor: config.backgroundColor,
-      textColor: config.textColor,
-      borderColor: config.borderColor,
-      borderRadius: config.borderRadius.toString(),
-      buttonStyle: config.buttonStyle,
-      tokenSymbol: config.tokenSymbol,
-      tokenAmount: config.tokenAmount,
-      merchantName: config.merchantName,
-      transactionId: config.transactionId,
-      customTitle: config.customTitle,
-      recipientAddress: config.recipientAddress,
-      showTransactionId: config.showTransactionId.toString(),
-      animation: config.animation,
-      usdAmount: config.usdAmount,
+      pc: config.primaryColor,
+      bg: config.backgroundColor,
+      tc: config.textColor,
+      bc: config.borderColor,
+      br: config.borderRadius.toString(),
+      bs: config.buttonStyle,
+      ts: config.tokenSymbol,
+      ta: config.tokenAmount,
+      mn: config.merchantName,
+      ti: config.transactionId,
+      ct: config.customTitle,
+      ra: config.recipientAddress,
+      st: config.showTransactionId.toString(),
+      an: config.animation,
+      ua: config.usdAmount,
     })
+    // Include thumbnail if present (it's a Vercel Blob URL, not base64, so it's reasonable length)
     if (config.customThumbnail) {
-        // Warning: Base64 images in URL might hit length limits
-        params.append('customThumbnail', config.customThumbnail);
+      params.append('th', config.customThumbnail);
     }
-    const link = `${window.location.origin}/pay/${uniqueId}?${params.toString()}`
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+    const link = `${baseUrl}/pay/${uniqueId}?${params.toString()}`
     setGeneratedLink(link)
     toast.success("Payment link generated!")
   }, [config])
@@ -230,49 +232,54 @@ export default function CustomThumbnailPage() {
   const handleDownloadLinkQR = useCallback(() => {
     if (linkQrCodeRef.current) {
       const svgElement = linkQrCodeRef.current.querySelector('svg');
-      if (svgElement) {
+      const canvasElement = linkQrCodeRef.current.querySelector('canvas');
+
+      const processCanvas = (sourceCanvas: HTMLCanvasElement | HTMLImageElement) => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
+        // Set canvas size (add some padding)
+        const padding = 40;
+        const size = 500;
+        canvas.width = size;
+        canvas.height = size;
+
+        // Fill white background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw QR code centered
+        ctx.drawImage(sourceCanvas, padding, padding, size - (padding * 2), size - (padding * 2));
+        
+        // Add text at bottom
+        ctx.fillStyle = '#000000';
+        ctx.font = 'bold 20px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('SCAN TO PAY', canvas.width / 2, canvas.height - 15);
+
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = `gravity-payment-link.png`;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(url);
+            toast.success("QR Code downloaded!");
+          }
+        }, 'image/png');
+      };
+
+      if (canvasElement) {
+        processCanvas(canvasElement);
+      } else if (svgElement) {
         const svgData = new XMLSerializer().serializeToString(svgElement);
         const img = new Image();
         
-        img.onload = () => {
-          // Set canvas size (add some padding)
-          const padding = 40;
-          const size = 500;
-          canvas.width = size;
-          canvas.height = size;
-
-          // Fill white background
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          // Draw QR code centered
-          ctx.drawImage(img, padding, padding, size - (padding * 2), size - (padding * 2));
-          
-          // Add text at bottom
-          ctx.fillStyle = '#000000';
-          ctx.font = 'bold 20px monospace';
-          ctx.textAlign = 'center';
-          ctx.fillText('SCAN TO PAY', canvas.width / 2, canvas.height - 15);
-
-          canvas.toBlob((blob) => {
-            if (blob) {
-              const url = URL.createObjectURL(blob);
-              const downloadLink = document.createElement('a');
-              downloadLink.href = url;
-              downloadLink.download = `gravity-payment-link.png`;
-              document.body.appendChild(downloadLink);
-              downloadLink.click();
-              document.body.removeChild(downloadLink);
-              URL.revokeObjectURL(url);
-              toast.success("QR Code downloaded!");
-            }
-          }, 'image/png');
-        };
-
+        img.onload = () => processCanvas(img);
         img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
       }
     }
@@ -870,7 +877,15 @@ export default function CustomThumbnailPage() {
         {generatedLink && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
             <div className="bg-background border border-border p-6 rounded-xl shadow-2xl max-w-md w-full space-y-6 animate-in zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto">
-              <div className="text-center space-y-2">
+              <div className="text-center space-y-2 relative">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute -top-2 -right-2 h-8 w-8 rounded-full hover:bg-muted"
+                  onClick={() => setGeneratedLink(null)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Copy className="w-6 h-6 text-primary" />
                 </div>
@@ -909,9 +924,7 @@ export default function CustomThumbnailPage() {
                 </Link>
               </div>
 
-              <Button variant="ghost" className="w-full" onClick={() => setGeneratedLink(null)}>
-                CLOSE
-              </Button>
+
             </div>
           </div>
         )}

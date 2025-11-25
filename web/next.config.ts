@@ -1,13 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Turbopack configuration (Next.js 16+)
-  turbopack: {
-    // Empty turbopack config to silence the warning
-    // Your webpack config will be used as fallback
-  },
+  // Exclude server-only packages from being bundled
+  serverExternalPackages: [
+    'thread-stream',
+    'pino',
+    'pino-pretty',
+    'sonic-boom',
+    '@walletconnect/logger',
+  ],
 
-  // Webpack configuration (fallback for legacy compatibility)
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Exclude server-only packages from client bundle
@@ -21,14 +23,28 @@ const nextConfig: NextConfig = {
       });
     }
 
-    // Ignore test files and other unnecessary files
+    // Exclude examples directory from build
+    config.module.rules.push({
+      test: /\.ts$/,
+      include: /examples/,
+      use: 'ignore-loader'
+    });
+
+    // Ignore test files
     config.module.rules.push({
       test: /\.(test|spec)\.(js|ts|tsx)$/,
       use: 'ignore-loader'
     });
 
+    // Fix MetaMask SDK async-storage dependency
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      '@react-native-async-storage/async-storage': false,
+    };
+
     return config;
   },
+  
   images: {
     remotePatterns: [
       {

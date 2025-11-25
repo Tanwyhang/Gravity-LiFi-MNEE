@@ -156,8 +156,25 @@ export function generatePaymentUrl(basePath: string, eventId: string, theme: Pay
 export function parseUrlThemeParams(searchParams: URLSearchParams): Partial<PaymentTheme['config']> {
   const config: Partial<PaymentTheme['config']> = {};
 
-  // Map URL parameters to config keys
+  // Map URL parameters to config keys - supports both short (new) and long (backward compatibility) names
   const paramMapping: Record<string, keyof PaymentTheme['config']> = {
+    // Short names (new, reduce QR complexity)
+    pc: 'primaryColor',
+    bg: 'backgroundColor',
+    tc: 'textColor',
+    bc: 'borderColor',
+    br: 'borderRadius',
+    bs: 'buttonStyle',
+    ts: 'tokenSymbol',
+    ta: 'tokenAmount',
+    mn: 'merchantName',
+    ti: 'transactionId',
+    ct: 'customTitle',
+    ra: 'recipientAddress',
+    st: 'showTransactionId',
+    an: 'animation',
+    th: 'customThumbnail',
+    // Long names (backward compatibility)
     primaryColor: 'primaryColor',
     backgroundColor: 'backgroundColor',
     textColor: 'textColor',

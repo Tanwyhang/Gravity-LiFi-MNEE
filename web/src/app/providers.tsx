@@ -17,6 +17,7 @@ import {
 } from "@tanstack/react-query";
 import { WagmiProvider } from 'wagmi';
 import { config } from '@/config/wagmi';
+import '@/lib/lifi'; // Initialize LiFi config
 import '@rainbow-me/rainbowkit/styles.css';
 
 const queryClient = new QueryClient();

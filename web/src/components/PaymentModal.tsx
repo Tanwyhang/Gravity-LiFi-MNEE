@@ -7,11 +7,9 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { TokenSelector, Token } from './TokenSelector';
-import { useGravityPayment } from '@/hooks/useGravityPayment';
+import { useLiFiPayment } from '@/hooks/useLiFiPayment';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useReadContract } from 'wagmi';
-import { convertUSDToTokenAmount } from '@/lib/priceOracle';
-import { erc20Abi } from 'viem';
+import { useAccount } from 'wagmi';
 import { PaymentSuccessModal } from './PaymentSuccessModal';
 
 export interface PaymentModalConfig {
@@ -227,35 +225,11 @@ export function PaymentModal({ isOpen, onClose, amountUSD, eventId = "1", config
   const [selectedToken, setSelectedToken] = React.useState<Token | undefined>();
   const [showSuccessModal, setShowSuccessModal] = React.useState(false);
 
-  // Get token decimals
-  const { data: tokenDecimals } = useReadContract({
-    address: selectedToken?.address,
-    abi: erc20Abi,
-    functionName: 'decimals',
-    query: { enabled: !!selectedToken?.address },
-  });
-
-  // Convert USD to token amount (async)
-  const [tokenAmount, setTokenAmount] = React.useState<string>('0');
-  
-  React.useEffect(() => {
-    if (!selectedToken?.address || !tokenDecimals) {
-      setTokenAmount('0');
-      return;
-    }
-    
-    convertUSDToTokenAmount(amountUSD, selectedToken.address, tokenDecimals)
-      .then(amount => setTokenAmount(amount))
-      .catch(err => {
-        console.error('Price conversion error:', err);
-        setTokenAmount('0');
-      });
-  }, [amountUSD, selectedToken?.address, tokenDecimals]);
-  
-  const { pay, state, path, isPathLoading, canPay } = useGravityPayment(
+  const { pay, state, quote, estimatedAmountIn } = useLiFiPayment(
     selectedToken?.address,
-    tokenAmount,
-    eventId
+    selectedToken?.chainId,
+    amountUSD,
+    styles.recipientAddress
   );
 
   // Show success modal when payment is complete
@@ -338,7 +312,7 @@ export function PaymentModal({ isOpen, onClose, amountUSD, eventId = "1", config
           {/* Amount Display */}
           <div className="text-center py-4 space-y-1">
              <div className="text-sm mb-1" style={{ color: styles.primaryColor, opacity: 0.7 }}>
-              ≈ {styles.tokenAmount} <span className="font-bold" style={{ color: styles.primaryColor, opacity: 0.9 }}>{styles.tokenSymbol}</span>
+              ≈ {selectedToken ? estimatedAmountIn : styles.tokenAmount} <span className="font-bold" style={{ color: styles.primaryColor, opacity: 0.9 }}>{selectedToken?.symbol || styles.tokenSymbol}</span>
              </div>
              <div className="relative inline-block">
                 <span className="absolute left-0 top-1/2 transform -translate-x-full -translate-y-1/2 text-4xl font-bold tracking-tighter pr-1" style={{ color: styles.primaryColor, opacity: 0.5 }}>$</span>
@@ -390,9 +364,9 @@ export function PaymentModal({ isOpen, onClose, amountUSD, eventId = "1", config
                 <div className="p-3 rounded-lg" style={{ backgroundColor: `${styles.primaryColor}15`, borderColor: `${styles.primaryColor}30`, borderWidth: 1 }}>
                   <div className="flex items-center justify-between text-sm">
                     <span style={{ color: styles.primaryColor }}>Best Route Found</span>
-                    {isPathLoading ? (
+                    {state.status === 'quoting' ? (
                       <Loader2 className="w-3 h-3 animate-spin" style={{ color: styles.primaryColor }} />
-                    ) : path ? (
+                    ) : quote ? (
                       <span className="font-mono text-xs" style={{ color: styles.primaryColor }}>
                         {selectedToken.symbol} → ... → MNEE
                       </span>
@@ -412,7 +386,7 @@ export function PaymentModal({ isOpen, onClose, amountUSD, eventId = "1", config
                   borderRadius: styles.borderRadius,
                   borderColor: styles.buttonStyle === 'outline' ? styles.primaryColor : 'transparent'
                 }}
-                disabled={!canPay}
+                disabled={!quote || state.isPaying}
                 onClick={pay}
               >
                 {state.isApproving ? (
@@ -423,7 +397,7 @@ export function PaymentModal({ isOpen, onClose, amountUSD, eventId = "1", config
                 ) : state.isPaying ? (
                   <React.Fragment>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Confirming Payment...
+                    Processing Payment...
                   </React.Fragment>
                 ) : (
                   <React.Fragment>
@@ -492,7 +466,7 @@ export function PaymentModal({ isOpen, onClose, amountUSD, eventId = "1", config
         }}
         txHash={state.txHash || ''}
         amountUSD={amountUSD}
-        amountToken={tokenAmount}
+        amountToken={estimatedAmountIn}
         tokenSymbol={selectedToken?.symbol}
         recipientAddress={styles.recipientAddress}
         eventId={eventId}

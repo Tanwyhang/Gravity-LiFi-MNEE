@@ -48,7 +48,7 @@ function PaymentContent() {
     return `/pay/demo?${params.toString()}`;
   };
 
-  console.log('Demo URL:', 'http://localhost:3000/pay/dvhtzhe?primaryColor=%23243370&backgroundColor=%23d6fffa&textColor=%23000000&borderColor=%23030303&borderRadius=17&buttonStyle=solid&tokenSymbol=ETH&tokenAmount=0.05&merchantName=GRAVITY_PAY&transactionId=%23DEMO123&customTitle=PAY_WITH_CRYPTO&recipientAddress=0x0ce3580766DcdDAf281DcCE968885A989E9B0e99&showTransactionId=true&animation=pulse&usdAmount=124.50&customThumbnail=');
+  console.log('Demo URL:', `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/pay/dvhtzhe?primaryColor=%23243370&backgroundColor=%23d6fffa&textColor=%23000000&borderColor=%23030303&borderRadius=17&buttonStyle=solid&tokenSymbol=ETH&tokenAmount=0.05&merchantName=GRAVITY_PAY&transactionId=%23DEMO123&customTitle=PAY_WITH_CRYPTO&recipientAddress=0x0ce3580766DcdDAf281DcCE968885A989E9B0e99&showTransactionId=true&animation=pulse&usdAmount=124.50&customThumbnail=`);
 
   return (
     <div className="relative z-10 flex items-center justify-center w-full h-full">

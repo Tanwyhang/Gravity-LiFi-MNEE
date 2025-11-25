@@ -31,7 +31,8 @@ export default function Home() {
   const y3 = useTransform(scrollYProgress, [0, 1], [0, 200])
   const y4 = useTransform(scrollYProgress, [0, 1], [0, 700])
 
-  const demoPaymentUrl = "http://localhost:3000/pay/kslwjq2?primaryColor=%23360740&backgroundColor=%23ff85c2&textColor=%23000000&borderColor=%2399ceff&borderRadius=12&buttonStyle=solid&tokenSymbol=ETH&tokenAmount=0.0402&merchantName=GRAVITY_PAY&transactionId=%23DEMO123&customTitle=DEMO+PAYMENT&recipientAddress=0x0ce3580766DcdDAf281DcCE968885A989E9B0e99&showTransactionId=true&animation=pulse&usdAmount=99.99&customThumbnail=https%3A%2F%2Fmwtzwo37egeya3fd.public.blob.vercel-storage.com%2Fkaiju-kingz-kaiju-V0KhO0S4xMTwH4f8EkymjqgO9R0Mrg.gif";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const demoPaymentUrl = `${baseUrl}/pay/kslwjq2?primaryColor=%23360740&backgroundColor=%23ff85c2&textColor=%23000000&borderColor=%2399ceff&borderRadius=12&buttonStyle=solid&tokenSymbol=ETH&tokenAmount=0.0402&merchantName=GRAVITY_PAY&transactionId=%23DEMO123&customTitle=DEMO+PAYMENT&recipientAddress=0x0ce3580766DcdDAf281DcCE968885A989E9B0e99&showTransactionId=true&animation=pulse&usdAmount=99.99&customThumbnail=https%3A%2F%2Fmwtzwo37egeya3fd.public.blob.vercel-storage.com%2Fkaiju-kingz-kaiju-V0KhO0S4xMTwH4f8EkymjqgO9R0Mrg.gif`;
 
   const modalConfigsWithThumbnail: PaymentModalConfig[] = [
     {
@@ -259,7 +260,7 @@ export default function Home() {
                       data={demoPaymentUrl}
                       foreground="#000000"
                       background="#ffffff"
-                      robustness="M"
+                      robustness="L"
                     />
                   </div>
                 </motion.div>

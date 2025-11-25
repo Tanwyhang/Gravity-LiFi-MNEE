@@ -1,5 +1,0 @@
-check contract implementation, i wanna allow any 
-arbitary erc20 tokens to be able to be swapped to MNEE 
-stablecoin and transfer to the recipients wallet, so its 
-accepting payment in any form but the receiver receives 
-in MNEE coin (which is 1:1 to usd)

@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo, useRef, useEffect } from "react"
 import { useAccount } from "wagmi"
-import { Eye, ArrowLeft, Copy } from "lucide-react"
+import { Eye, ArrowLeft, Copy, X } from "lucide-react"
 import { Slider } from "@/components/ui/slider"
 import { Spinner } from "@/components/ui/shadcn-io/spinner"
 import { QRCode } from "@/components/ui/shadcn-io/qr-code"
@@ -199,29 +199,31 @@ export default function SimplePage() {
 
   const handleGenerateLink = useCallback(() => {
     const uniqueId = Math.random().toString(36).substring(2, 9)
+    // Use shorter param names to reduce QR code complexity
     const params = new URLSearchParams({
-      primaryColor: config.primaryColor,
-      backgroundColor: config.backgroundColor,
-      textColor: config.textColor,
-      borderColor: config.borderColor,
-      borderRadius: config.borderRadius.toString(),
-      buttonStyle: config.buttonStyle,
-      tokenSymbol: config.tokenSymbol,
-      tokenAmount: config.tokenAmount,
-      merchantName: config.merchantName,
-      transactionId: config.transactionId,
-      customTitle: config.customTitle,
-      recipientAddress: config.recipientAddress,
-      showTransactionId: config.showTransactionId.toString(),
-      animation: config.animation,
-      usdAmount: config.usdAmount,
-      // customThumbnail might be too large for URL if it's base64, but for now we include it if present
-      // Ideally this should be uploaded and a URL passed, but for this demo we'll try
-      customThumbnail: config.customThumbnail || '',
+      pc: config.primaryColor,
+      bg: config.backgroundColor,
+      tc: config.textColor,
+      bc: config.borderColor,
+      br: config.borderRadius.toString(),
+      bs: config.buttonStyle,
+      ts: config.tokenSymbol,
+      ta: config.tokenAmount,
+      mn: config.merchantName,
+      ti: config.transactionId,
+      ct: config.customTitle,
+      ra: config.recipientAddress,
+      st: config.showTransactionId.toString(),
+      an: config.animation,
+      ua: config.usdAmount,
     })
-    // Simple template doesn't have customThumbnail
+    // Include thumbnail if present (it's a Vercel Blob URL, not base64, so it's reasonable length)
+    if (config.customThumbnail) {
+      params.append('th', config.customThumbnail);
+    }
 
-    const link = `${window.location.origin}/pay/${uniqueId}?${params.toString()}`
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+    const link = `${baseUrl}/pay/${uniqueId}?${params.toString()}`
     setGeneratedLink(link)
     toast.success("Payment link generated!")
   }, [config])
@@ -818,7 +820,15 @@ export default function SimplePage() {
         {generatedLink && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
             <div className="bg-background border border-border p-6 rounded-xl shadow-2xl max-w-md w-full space-y-6 animate-in zoom-in-95 duration-300">
-              <div className="text-center space-y-2">
+              <div className="text-center space-y-2 relative">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute -top-2 -right-2 h-8 w-8 rounded-full hover:bg-muted"
+                  onClick={() => setGeneratedLink(null)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Copy className="w-6 h-6 text-primary" />
                 </div>
@@ -844,9 +854,7 @@ export default function SimplePage() {
                 </Link>
               </div>
 
-              <Button variant="ghost" className="w-full" onClick={() => setGeneratedLink(null)}>
-                CLOSE
-              </Button>
+
             </div>
           </div>
         )}

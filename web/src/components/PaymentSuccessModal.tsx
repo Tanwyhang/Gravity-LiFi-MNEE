@@ -50,18 +50,6 @@ export function PaymentSuccessModal({
 
   // QR Code data with Etherscan link
   const qrData = `https://etherscan.io/tx/0xcb875953793996431027da84f6905e7867f80f69481bb1790f7a678144e1158b`;
-  const paymentInfo = {
-    type: 'gravity_payment',
-    txHash,
-    amountUSD,
-    amountToken,
-    tokenSymbol,
-    recipientAddress,
-    eventId,
-    timestamp: new Date().toISOString(),
-    contractAddress: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
-    etherscanUrl: 'https://etherscan.io/tx/0xcb875953793996431027da84f6905e7867f80f69481bb1790f7a678144e1158b'
-  };
 
   if (!isOpen) return null;
 
@@ -218,7 +206,7 @@ export function PaymentSuccessModal({
                         data={qrData}
                         foreground="#000000"
                         background="#ffffff"
-                        robustness="H"
+                        robustness="L"
                       />
                     </div>
                   </motion.div>
