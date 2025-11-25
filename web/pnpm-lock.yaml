@@ -20,6 +20,9 @@ importers:
       '@metamask/sdk':
         specifier: ^0.34.0
         version: 0.34.0(bufferutil@4.0.9)(encoding@0.1.13)(utf-8-validate@5.0.10)
+      '@mnee/ts-sdk':
+        specifier: ^1.0.2
+        version: 1.0.2
       '@paper-design/shaders-react':
         specifier: ^0.0.65
         version: 0.0.65(@types/react@19.2.6)(react@19.2.0)
@@ -274,6 +277,9 @@ packages:
   '@bcoe/v8-coverage@1.0.2':
     resolution: {integrity: sha512-6zABk/ECA/QYSCQ1NGiVwwbQerUCZ+TQbp64Q3AgmfNvurHH0j8TtXa1qbShXA6qqkpAj4V5W8pP6mLe1mcMqA==}
     engines: {node: '>=18'}
+
+  '@bsv/sdk@1.9.9':
+    resolution: {integrity: sha512-bN90ULdrVJXokoWyF1Yw/sqtAns+T7CFAEA/J40RHKlHIkGN6Rb/ruWXGAL+rb1iJ/YzhnNs+y53dRdMCCkcxA==}
 
   '@chevrotain/cst-dts-gen@10.5.0':
     resolution: {integrity: sha512-lhmC/FyqQ2o7pGK4Om+hzuDrm9rhFYIJ/AXoQBeongmn870Xeb0L6oGEiuR8nohFNL5sMaQEJWCxr1oIVIVXrw==}
@@ -702,6 +708,9 @@ packages:
   '@metamask/utils@9.3.0':
     resolution: {integrity: sha512-w8CVbdkDrVXFJbfBSlDfafDR6BAkpDmv1bC1UJVCoVny5tW2RKAdn9i68Xf7asYT4TnUhl/hN4zfUiKQq9II4g==}
     engines: {node: '>=16.0.0'}
+
+  '@mnee/ts-sdk@1.0.2':
+    resolution: {integrity: sha512-ICZeG85CdNmKRXWVHgRLvBnrTjRxGelak/tmLBr8g9qlWP9BHve6UUTelTyW7gN0573zVCCQVbyssiRqohHM9w==}
 
   '@mrleebo/prisma-ast@0.12.1':
     resolution: {integrity: sha512-JwqeCQ1U3fvccttHZq7Tk0m/TMC6WcFAQZdukypW3AzlJYKYTGNVd1ANU2GuhKnv4UQuOFj3oAl0LLG/gxFN1w==}
@@ -2522,6 +2531,9 @@ packages:
 
   big.js@6.2.2:
     resolution: {integrity: sha512-y/ie+Faknx7sZA5MfGA2xKlu0GDv8RWrXGsmlteyJQ2lvoKv9GBK/fpRMc2qlSoBAgNxrixICFCBefIq8WCQpQ==}
+
+  bip39@3.1.0:
+    resolution: {integrity: sha512-c9kiwdk45Do5GL0vJMe7tS95VjCii65mYAH7DfWl3uW8AVzXKQVUm64i3hzVybBDMp9r7j9iNxR85+ul8MdN/A==}
 
   blakejs@1.2.1:
     resolution: {integrity: sha512-QXUSXI3QVc/gJME0dBpXrag1kbzOqCjCX8/b54ntNyW6sjtoqxqRk3LTmXzaJoh71zMsDCjM+47jS7XiwN/+fQ==}
@@ -5849,6 +5861,8 @@ snapshots:
 
   '@bcoe/v8-coverage@1.0.2': {}
 
+  '@bsv/sdk@1.9.9': {}
+
   '@chevrotain/cst-dts-gen@10.5.0':
     dependencies:
       '@chevrotain/gast': 10.5.0
@@ -6391,6 +6405,11 @@ snapshots:
       uuid: 9.0.1
     transitivePeerDependencies:
       - supports-color
+
+  '@mnee/ts-sdk@1.0.2':
+    dependencies:
+      '@bsv/sdk': 1.9.9
+      bip39: 3.1.0
 
   '@mrleebo/prisma-ast@0.12.1':
     dependencies:
@@ -9134,6 +9153,10 @@ snapshots:
   baseline-browser-mapping@2.8.29: {}
 
   big.js@6.2.2: {}
+
+  bip39@3.1.0:
+    dependencies:
+      '@noble/hashes': 1.8.0
 
   blakejs@1.2.1: {}
 

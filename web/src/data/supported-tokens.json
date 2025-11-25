@@ -1,0 +1,122 @@
+[
+  {
+    "symbol": "DAI",
+    "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+    "decimals": 18,
+    "usdcPoolAddress": "0x5777d92f208679DB4b9778590Fa3CAB3aC9e2168",
+    "usdcPoolFee": 100,
+    "liquidity": "228973684926747065414610",
+    "swapPath": {
+      "description": "DAI → USDC (0.01%) → MNEE (0.01%)",
+      "encoding": "encodePacked(['address', 'uint24', 'address', 'uint24', 'address'], [DAI, 100, USDC, 100, MNEE])"
+    }
+  },
+  {
+    "symbol": "LINK",
+    "address": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+    "decimals": 18,
+    "usdcPoolAddress": "0xFAD57d2039C21811C8F2B5D5B65308aa99D31559",
+    "usdcPoolFee": 3000,
+    "liquidity": "4877334289904363429",
+    "swapPath": {
+      "description": "LINK → USDC (0.30%) → MNEE (0.01%)",
+      "encoding": "encodePacked(['address', 'uint24', 'address', 'uint24', 'address'], [LINK, 3000, USDC, 100, MNEE])"
+    }
+  },
+  {
+    "symbol": "WETH",
+    "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "decimals": 18,
+    "usdcPoolAddress": "0x8ad599c3A0ff1De082011EFDDc58f1908eb6e6D8",
+    "usdcPoolFee": 3000,
+    "liquidity": "1449430715696139808",
+    "swapPath": {
+      "description": "WETH → USDC (0.30%) → MNEE (0.01%)",
+      "encoding": "encodePacked(['address', 'uint24', 'address', 'uint24', 'address'], [WETH, 3000, USDC, 100, MNEE])"
+    }
+  },
+  {
+    "symbol": "CRV",
+    "address": "0xD533a949740bb3306d119CC777fa900bA034cd52",
+    "decimals": 18,
+    "usdcPoolAddress": "0x9445bd19767F73DCaE6f2De90e6cd31192F62589",
+    "usdcPoolFee": 10000,
+    "liquidity": "391671243644239857",
+    "swapPath": {
+      "description": "CRV → USDC (1.00%) → MNEE (0.01%)",
+      "encoding": "encodePacked(['address', 'uint24', 'address', 'uint24', 'address'], [CRV, 10000, USDC, 100, MNEE])"
+    }
+  },
+  {
+    "symbol": "UNI",
+    "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+    "decimals": 18,
+    "usdcPoolAddress": "0xD0fC8bA7E267f2bc56044A7715A489d851dC6D78",
+    "usdcPoolFee": 3000,
+    "liquidity": "93163518101969663",
+    "swapPath": {
+      "description": "UNI → USDC (0.30%) → MNEE (0.01%)",
+      "encoding": "encodePacked(['address', 'uint24', 'address', 'uint24', 'address'], [UNI, 3000, USDC, 100, MNEE])"
+    }
+  },
+  {
+    "symbol": "USDT",
+    "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "decimals": 6,
+    "usdcPoolAddress": "0x3416cF6C708Da44DB2624D63ea0AAef7113527C6",
+    "usdcPoolFee": 100,
+    "liquidity": "69699649609767046",
+    "swapPath": {
+      "description": "USDT → USDC (0.01%) → MNEE (0.01%)",
+      "encoding": "encodePacked(['address', 'uint24', 'address', 'uint24', 'address'], [USDT, 100, USDC, 100, MNEE])"
+    }
+  },
+  {
+    "symbol": "AAVE",
+    "address": "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
+    "decimals": 18,
+    "usdcPoolAddress": "0xdceaf5d0E5E0dB9596A47C0c4120654e80B1d706",
+    "usdcPoolFee": 3000,
+    "liquidity": "27375271306344189",
+    "swapPath": {
+      "description": "AAVE → USDC (0.30%) → MNEE (0.01%)",
+      "encoding": "encodePacked(['address', 'uint24', 'address', 'uint24', 'address'], [AAVE, 3000, USDC, 100, MNEE])"
+    }
+  },
+  {
+    "symbol": "LDO",
+    "address": "0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32",
+    "decimals": 18,
+    "usdcPoolAddress": "0x78235D08B2aE7a3E00184329212a4d7AcD2F9985",
+    "usdcPoolFee": 10000,
+    "liquidity": "9988508205919623",
+    "swapPath": {
+      "description": "LDO → USDC (1.00%) → MNEE (0.01%)",
+      "encoding": "encodePacked(['address', 'uint24', 'address', 'uint24', 'address'], [LDO, 10000, USDC, 100, MNEE])"
+    }
+  },
+  {
+    "symbol": "SNX",
+    "address": "0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F",
+    "decimals": 18,
+    "usdcPoolAddress": "0x020C349A0541D76C16F501Abc6B2E9c98AdAe892",
+    "usdcPoolFee": 10000,
+    "liquidity": "141940680128483",
+    "swapPath": {
+      "description": "SNX → USDC (1.00%) → MNEE (0.01%)",
+      "encoding": "encodePacked(['address', 'uint24', 'address', 'uint24', 'address'], [SNX, 10000, USDC, 100, MNEE])"
+    }
+  },
+  {
+    "symbol": "WBTC",
+    "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+    "decimals": 8,
+    "usdcPoolAddress": "0x99ac8cA7087fA4A2A1FB6357269965A2014ABc35",
+    "usdcPoolFee": 3000,
+    "liquidity": "3160241527961",
+    "swapPath": {
+      "description": "WBTC → USDC (0.30%) → MNEE (0.01%)",
+      "encoding": "encodePacked(['address', 'uint24', 'address', 'uint24', 'address'], [WBTC, 3000, USDC, 100, MNEE])"
+    }
+  }
+]

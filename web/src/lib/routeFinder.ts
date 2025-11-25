@@ -1,150 +1,67 @@
-import { Address, createPublicClient, http } from 'viem';
-import { sepolia } from 'viem/chains';
-import { TOKEN_ROUTER_ADDRESS } from '@/contracts/addresses';
-import TokenRouterABI from '@/contracts/abis/TokenRouter.json';
+import { Address, createPublicClient, http, encodePacked, Hex } from 'viem';
+import { mainnet } from 'viem/chains';
+import { MNEE_TOKEN_ADDRESS, USDC_ADDRESS } from '@/contracts/addresses';
 
 // Use custom RPC if available, otherwise use public endpoint
-const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || 'https://sepolia.infura.io/v3/268702a6f88b4111a031782c39503bc0';
+const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || 'https://mainnet.infura.io/v3/268702a6f88b4111a031782c39503bc0';
 
 const publicClient = createPublicClient({
-  chain: sepolia,
+  chain: mainnet,
   transport: http(rpcUrl, {
     batch: false, // Disable batching for immediate results
   }),
 });
 
 /**
- * Find optimal route between two tokens using BFS
- * Adapted from Gravity/scripts/GravitySWAP.ts
+ * Find optimal route between two tokens and return encoded path bytes
+ * Path format: tokenA - fee - tokenB - fee - tokenC
  */
 export async function findOptimalPath(
   tokenIn: Address,
   tokenOut: Address,
   maxHops: number = 3
-): Promise<Address[] | null> {
+): Promise<Hex | null> {
   try {
-    console.log('🔍 MOCK: Finding route from', tokenIn, 'to', tokenOut, 'with max hops:', maxHops);
+    console.log('🔍 Finding route from', tokenIn, 'to', tokenOut);
 
-    // If same token, return single-element path
+    // Fees
+    const FEE_LOW = 100;      // 0.01%
+    const FEE_MEDIUM = 3000;  // 0.3%
+    const FEE_HIGH = 10000;   // 1%
+
+    // If same token, return null (no swap needed)
     if (tokenIn.toLowerCase() === tokenOut.toLowerCase()) {
-      console.log('✅ MOCK: Same token, returning direct path');
-      return [tokenIn];
+      return null;
     }
 
-    // MOCK: Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // MOCK: Always return a path via USDC as intermediate token
-    const USDC_ADDRESS = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
-
-    if (tokenIn.toLowerCase() === USDC_ADDRESS.toLowerCase()) {
-      // Direct USDC to MNEE path
-      const mockPath: Address[] = [tokenIn, tokenOut];
-      console.log('✅ MOCK: Direct USDC to MNEE path found:', mockPath.map(a => a.slice(0, 6)).join(' → '));
-      return mockPath;
-    } else {
-      // Token -> USDC -> MNEE path
-      const mockPath: Address[] = [tokenIn, USDC_ADDRESS as Address, tokenOut];
-      console.log('✅ MOCK: Multi-hop path via USDC found:', mockPath.map(a => a.slice(0, 6)).join(' → '));
-      return mockPath;
+    // Case 1: USDC -> MNEE
+    if (tokenIn.toLowerCase() === USDC_ADDRESS.toLowerCase() && tokenOut.toLowerCase() === MNEE_TOKEN_ADDRESS.toLowerCase()) {
+      console.log('✅ Direct USDC -> MNEE path found');
+      // Path: [USDC, 100, MNEE]
+      return encodePacked(
+        ['address', 'uint24', 'address'],
+        [tokenIn, FEE_LOW, tokenOut]
+      );
     }
 
-    /*
-    // ORIGINAL BLOCKCHAIN INTERACTIONS (COMMENTED OUT):
-
-    const normalizedOut = tokenOut.toLowerCase();
-    const queue: Address[][] = [[tokenIn]];
-    const visited = new Set<string>([tokenIn.toLowerCase()]);
-    const neighborCache = new Map<string, Address[]>();
-
-    let iterations = 0;
-    while (queue.length > 0) {
-      iterations++;
-      const currentPath = queue.shift()!;
-      const last = currentPath[currentPath.length - 1];
-
-      console.log(`  Iteration ${iterations}: Exploring path`, currentPath.map(a => a.slice(0, 6)).join(' → '));
-
-      // Stop if we've exceeded max hops
-      if (currentPath.length - 1 >= maxHops) {
-        console.log('  ⚠️ Max hops reached, skipping');
-        continue;
-      }
-
-      // Get neighbors for current token
-      const neighborKey = last.toLowerCase();
-      let neighbors = neighborCache.get(neighborKey);
-
-      if (!neighbors) {
-        try {
-          console.log('  📡 Fetching neighbors for', last.slice(0, 6));
-          const fetchedNeighbors = await publicClient.readContract({
-            address: TOKEN_ROUTER_ADDRESS,
-            abi: TokenRouterABI.abi,
-            functionName: 'getNeighbors',
-            args: [last],
-          }) as Address[];
-
-          console.log('  ✅ Found', fetchedNeighbors.length, 'neighbors:', fetchedNeighbors.map(n => n.slice(0, 6)));
-          neighborCache.set(neighborKey, fetchedNeighbors);
-          neighbors = fetchedNeighbors;
-        } catch (error) {
-          console.error(`  ❌ Failed to get neighbors for ${last}:`, error);
-          continue;
-        }
-      }
-
-      if (!neighbors || neighbors.length === 0) {
-        console.log('  ⚠️ No neighbors found');
-        continue;
-      }
-
-      // Explore neighbors
-      for (const neighbor of neighbors) {
-        const neighborLower = neighbor.toLowerCase();
-
-        if (visited.has(neighborLower)) {
-          console.log('  ⏭️ Already visited', neighbor.slice(0, 6));
-          continue;
-        }
-
-        visited.add(neighborLower);
-        const nextPath = [...currentPath, neighbor];
-
-        // Check if we've reached the destination
-        if (neighborLower === normalizedOut) {
-          console.log('  🎯 Found destination! Validating path...');
-          // Validate the path
-          try {
-            const isValid = await publicClient.readContract({
-              address: TOKEN_ROUTER_ADDRESS,
-              abi: TokenRouterABI.abi,
-              functionName: 'validatePath',
-              args: [nextPath],
-            }) as boolean;
-
-            console.log('  Validation result:', isValid);
-            if (isValid) {
-              console.log('✅ Valid route found:', nextPath.map(a => a.slice(0, 6)).join(' → '));
-              return nextPath;
-            }
-          } catch (error) {
-            console.error('  ❌ Path validation failed:', error);
-            continue;
-          }
-        }
-
-        queue.push(nextPath);
-      }
+    // Case 2: Any Token -> USDC -> MNEE
+    // We assume most tokens have a pool with USDC (fee 3000 or 500 or 100)
+    // For simplicity/demo, we assume 3000 (0.3%) for Token->USDC
+    if (tokenOut.toLowerCase() === MNEE_TOKEN_ADDRESS.toLowerCase()) {
+      console.log('✅ Multi-hop path via USDC found');
+      // Path: [tokenIn, 3000, USDC, 100, MNEE]
+      return encodePacked(
+        ['address', 'uint24', 'address', 'uint24', 'address'],
+        [tokenIn, FEE_MEDIUM, USDC_ADDRESS, FEE_LOW, tokenOut]
+      );
     }
 
-    // No path found
-    console.log('❌ No route found after', iterations, 'iterations');
+    // TODO: Implement real BFS pathfinding with pool existence checks for production
+    console.warn('❌ No route found (fallback)');
     return null;
-    */
 
   } catch (error) {
-    console.error('❌ MOCK: Route discovery failed:', error);
+    console.error('❌ Route discovery failed:', error);
     return null;
   }
 }
@@ -153,21 +70,7 @@ export async function findOptimalPath(
  * Calculate route confidence score
  */
 export function calculateRouteConfidence(path: Address[], hopCount: number): number {
-  let confidence = 100;
-
-  // Penalize longer routes
-  confidence -= hopCount * 15;
-
-  // Bonus for high-quality intermediate tokens (stablecoins, major tokens)
-  const highQualityTokens = [
-    '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238', // USDC Sepolia
-  ].map(addr => addr.toLowerCase());
-
-  for (const token of path.slice(1, -1)) {
-    if (highQualityTokens.includes(token.toLowerCase())) {
-      confidence += 10;
-    }
-  }
-
-  return Math.max(Math.min(confidence, 100), 0);
+  // Placeholder for now as we return bytes
+  return 100;
 }
+

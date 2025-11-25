@@ -255,7 +255,8 @@ export function PaymentModal({ isOpen, onClose, amountUSD, eventId = "1", config
   const { pay, state, path, isPathLoading, canPay } = useGravityPayment(
     selectedToken?.address,
     tokenAmount,
-    eventId
+    eventId,
+    styles.recipientAddress
   );
 
   // Show success modal when payment is complete

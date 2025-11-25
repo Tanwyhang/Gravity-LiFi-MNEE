@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, usePublicClient } from 'wagmi';
-import { parseUnits, formatUnits, erc20Abi, Address } from 'viem';
-import { GRAVITY_PAYMENT_ADDRESS, TOKEN_ROUTER_ADDRESS, MNEE_TOKEN_ADDRESS } from '@/contracts/addresses';
+import { useAccount, useReadContract, useWriteContract, usePublicClient } from 'wagmi';
+import { parseUnits, formatUnits, erc20Abi, Address, Hex } from 'viem';
+import { GRAVITY_PAYMENT_ADDRESS, MNEE_TOKEN_ADDRESS, QUOTER_ADDRESS } from '@/contracts/addresses';
 import GravityPaymentABI from '@/contracts/abis/GravityPayment.json';
-import TokenRouterABI from '@/contracts/abis/TokenRouter.json';
+import QuoterV2ABI from '@/contracts/abis/QuoterV2.json';
 import { findOptimalPath } from '@/lib/routeFinder';
 
 export interface PaymentState {
@@ -11,12 +11,14 @@ export interface PaymentState {
   isPaying: boolean;
   error: string | null;
   txHash: string | null;
+  quote: string | null;
 }
 
 export function useGravityPayment(
   tokenIn: Address | undefined,
   amountInRaw: string, // User input amount (e.g. "10.5")
-  eventId: string = "1" // Default event ID for now
+  eventId: string = "1", // Default event ID for now
+  recipient: string | undefined // Merchant address
 ) {
   const { address } = useAccount();
   const [state, setState] = useState<PaymentState>({
@@ -24,9 +26,11 @@ export function useGravityPayment(
     isPaying: false,
     error: null,
     txHash: null,
+    quote: null,
   });
-  const [path, setPath] = useState<Address[] | undefined>();
+  const [path, setPath] = useState<Hex | undefined>();
   const [isPathLoading, setIsPathLoading] = useState(false);
+  const [minAmountOut, setMinAmountOut] = useState<bigint>(0n);
 
   const { writeContractAsync } = useWriteContract();
   const publicClient = usePublicClient();
@@ -45,32 +49,81 @@ export function useGravityPayment(
   useEffect(() => {
     if (!tokenIn || amountIn <= 0n) {
       setPath(undefined);
+      setMinAmountOut(0n);
+      setState(prev => ({ ...prev, quote: null }));
       return;
     }
-
 
     let cancelled = false;
     setIsPathLoading(true);
 
-    findOptimalPath(tokenIn, MNEE_TOKEN_ADDRESS, 3)
-      .then((discoveredPath) => {
-        if (!cancelled) {
-          setPath(discoveredPath || undefined);
-          setIsPathLoading(false);
+    const fetchPathAndQuote = async () => {
+      try {
+        const discoveredPath = await findOptimalPath(tokenIn, MNEE_TOKEN_ADDRESS, 3);
+        
+        if (cancelled) return;
+
+        if (discoveredPath) {
+          setPath(discoveredPath);
+          
+          // Fetch Quote from QuoterV2
+          if (publicClient) {
+            try {
+              // QuoterV2 quoteExactInput returns (amountOut, sqrtPriceX96AfterList, initializedTicksCrossedList, gasEstimate)
+              // We use simulateContract or readContract. Quoter functions are not view, but we can static call them.
+              // However, wagmi/viem readContract handles this for non-view functions if we provide the right config?
+              // Actually, Quoter functions revert to return the result, or we use staticCall.
+              // Viem's readContract uses eth_call.
+              
+              const result = await publicClient.readContract({
+                address: QUOTER_ADDRESS,
+                abi: QuoterV2ABI,
+                functionName: 'quoteExactInput',
+                args: [discoveredPath, amountIn]
+              }) as [bigint, bigint[], number[], bigint];
+
+              const amountOut = result[0];
+              const formattedQuote = formatUnits(amountOut, 18); // Assuming MNEE is 18 decimals
+              
+              // Calculate minAmountOut with 1% slippage
+              const minOut = (amountOut * 99n) / 100n;
+              
+              if (!cancelled) {
+                setMinAmountOut(minOut);
+                setState(prev => ({ ...prev, quote: formattedQuote }));
+              }
+            } catch (quoteError) {
+              console.error('Quote failed:', quoteError);
+              // Fallback to 0 slippage if quote fails (risky but allows proceeding)
+              if (!cancelled) {
+                setMinAmountOut(0n);
+                setState(prev => ({ ...prev, quote: null }));
+              }
+            }
+          }
+        } else {
+          setPath(undefined);
+          setState(prev => ({ ...prev, quote: null }));
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Route discovery failed:', error);
         if (!cancelled) {
           setPath(undefined);
+          setState(prev => ({ ...prev, quote: null }));
+        }
+      } finally {
+        if (!cancelled) {
           setIsPathLoading(false);
         }
-      });
+      }
+    };
+
+    fetchPathAndQuote();
 
     return () => {
       cancelled = true;
     };
-  }, [tokenIn, amountIn]);
+  }, [tokenIn, amountIn, publicClient]);
 
   // 3. Check Allowance
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
@@ -82,82 +135,15 @@ export function useGravityPayment(
   });
 
   const handlePay = async () => {
-    if (!tokenIn || !amountIn || !address) return;
+    if (!tokenIn || !amountIn || !address || !recipient) {
+        setState(prev => ({ ...prev, error: "Missing payment details" }));
+        return;
+    }
 
     setState(prev => ({ ...prev, error: null }));
 
     try {
-      // Convert eventId string to a numeric BigInt
-      // Use a simple hash function to convert any string to a number
-      const eventIdBigInt = (() => {
-        // If eventId is already numeric, use it directly
-        if (/^\d+$/.test(eventId)) {
-          return BigInt(eventId);
-        }
-        // Otherwise, create a hash from the string
-        let hash = 0;
-        for (let i = 0; i < eventId.length; i++) {
-          const char = eventId.charCodeAt(i);
-          hash = ((hash << 5) - hash) + char;
-          hash = hash & hash; // Convert to 32bit integer
-        }
-        // Ensure positive number
-        return BigInt(Math.abs(hash));
-      })();
-
-      // MOCK: Simulate approval process
-      if (allowance !== undefined && allowance < amountIn) {
-        setState(prev => ({ ...prev, isApproving: true }));
-        // Mock approval delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        console.log('MOCK: Token approval simulated');
-        setState(prev => ({ ...prev, isApproving: false }));
-      }
-
-      // MOCK: Simulate payment process
-      setState(prev => ({ ...prev, isPaying: true }));
-
-      // Mock payment delay
-      await new Promise(resolve => setTimeout(resolve, 3000));
-
-      // MOCK: Use fixed transaction hash
-      const mockTxHash = "0x536d444bba96386dd4436fd297f785a7a6fc5f13b91cf57a2b59235def4b6bdd";
-
-      console.log('MOCK: Payment transaction simulated');
-      console.log('MOCK: Transaction hash:', mockTxHash);
-      console.log('MOCK: Event ID:', eventIdBigInt);
-      console.log('MOCK: Token in:', tokenIn);
-      console.log('MOCK: Amount in:', amountIn.toString());
-      console.log('MOCK: Path:', path);
-
-      /*
-      // ORIGINAL BLOCKCHAIN INTERACTIONS (COMMENTED OUT):
-
-      // Calculate minimum MNEE output with 5% slippage tolerance
-      let minMNEEOut = 0n;
-      try {
-        if (publicClient) {
-          const quote = await publicClient.readContract({
-            address: GRAVITY_PAYMENT_ADDRESS,
-            abi: GravityPaymentABI.abi,
-            functionName: 'getQuote',
-            args: [tokenIn, amountIn, path || []]
-          }) as bigint;
-
-          if (quote === 0n) {
-            throw new Error('Quote is 0. Insufficient liquidity or invalid path.');
-          }
-
-          // 5% slippage = 95% of quote
-          minMNEEOut = (quote * 95n) / 100n;
-          console.log('Quote:', formatUnits(quote, 18), 'MinOut:', formatUnits(minMNEEOut, 18));
-        }
-      } catch (e) {
-        console.error('Failed to get quote:', e);
-        throw new Error('Failed to calculate exchange rate. The path may be invalid or liquidity is insufficient.');
-      }
-
-      // 4. Final Safety Checks
+      // Check Balance
       const balance = await publicClient?.readContract({
         address: tokenIn,
         abi: erc20Abi,
@@ -169,90 +155,46 @@ export function useGravityPayment(
         throw new Error(`Insufficient balance. You have ${formatUnits(balance, decimals || 18)} but need ${formatUnits(amountIn, decimals || 18)}`);
       }
 
-      const currentAllowance = await publicClient?.readContract({
-        address: tokenIn,
-        abi: erc20Abi,
-        functionName: 'allowance',
-        args: [address, GRAVITY_PAYMENT_ADDRESS],
+      // Check Allowance & Approve if needed
+      if (allowance !== undefined && allowance < amountIn) {
+        setState(prev => ({ ...prev, isApproving: true }));
+        try {
+            const approveTx = await writeContractAsync({
+                address: tokenIn,
+                abi: erc20Abi,
+                functionName: 'approve',
+                args: [GRAVITY_PAYMENT_ADDRESS, amountIn],
+            });
+            await publicClient?.waitForTransactionReceipt({ hash: approveTx });
+            await refetchAllowance();
+        } catch (e) {
+            throw new Error('Approval failed or rejected');
+        } finally {
+            setState(prev => ({ ...prev, isApproving: false }));
+        }
+      }
+
+      setState(prev => ({ ...prev, isPaying: true }));
+
+      const payTx = await writeContractAsync({
+        address: GRAVITY_PAYMENT_ADDRESS,
+        abi: GravityPaymentABI.abi,
+        functionName: 'pay',
+        args: [
+            path || "0x",   // Encoded path
+            tokenIn,        // tokenIn
+            amountIn,       // amountIn
+            minAmountOut,   // minAmountOut (calculated from quote)
+            recipient as Address // recipient
+        ],
       });
 
-      if (currentAllowance !== undefined && currentAllowance < amountIn) {
-        throw new Error(`Insufficient allowance. Please approve the contract to spend your tokens.`);
-      }
-
-      // Check if token is allowed in SwapHook
-      try {
-        const swapHookAddress = await publicClient?.readContract({
-          address: GRAVITY_PAYMENT_ADDRESS,
-          abi: GravityPaymentABI.abi,
-          functionName: 'swapHook',
-        }) as Address;
-
-        if (swapHookAddress) {
-           // We need a minimal ABI for allowedTokens
-           const hookAbi = [{
-             type: 'function',
-             name: 'allowedTokens',
-             inputs: [{ name: '', type: 'address' }],
-             outputs: [{ name: '', type: 'bool' }],
-             stateMutability: 'view'
-           }] as const;
-
-           const isAllowed = await publicClient?.readContract({
-             address: swapHookAddress,
-             abi: hookAbi,
-             functionName: 'allowedTokens',
-             args: [tokenIn]
-           });
-
-           if (isAllowed === false) {
-             throw new Error(`Token ${tokenIn} is not whitelisted in the payment contract.`);
-           }
-        }
-      } catch (e) {
-        console.warn('Failed to check token allowlist:', e);
-        // Don't block payment on this check failing, but log it
-      }
-
-      try {
-        const payTx = await writeContractAsync({
-          address: GRAVITY_PAYMENT_ADDRESS,
-          abi: GravityPaymentABI.abi,
-          functionName: 'pay',
-          args: [
-              eventIdBigInt,
-              tokenIn,
-              amountIn,
-              address, // Recipient
-              minMNEEOut, // Minimum MNEE output (slippage protection)
-              path || [] // Swap path discovered by route finder
-          ],
-        });
-        setState(prev => ({ ...prev, txHash: payTx }));
-        await publicClient?.waitForTransactionReceipt({ hash: payTx });
-        setState(prev => ({ ...prev, isPaying: false }));
-      } catch (txErr: any) {
-        console.error('Transaction failed:', txErr);
-        if (txErr.message?.includes('gas') || txErr.message?.includes('revert')) {
-           throw new Error('Transaction simulation failed. The liquidity pool might be empty or the path is invalid.');
-        }
-        throw txErr;
-      }
-      */
-
-      // Set mock transaction hash and complete payment
-      setState(prev => ({ ...prev, txHash: mockTxHash, isPaying: false }));
+      setState(prev => ({ ...prev, txHash: payTx }));
+      await publicClient?.waitForTransactionReceipt({ hash: payTx });
+      setState(prev => ({ ...prev, isPaying: false }));
 
     } catch (err: any) {
       console.error('❌ Payment failed:', err);
-      console.error('Error details:', {
-        message: err.message,
-        code: err.code,
-        data: err.data,
-        tokenIn,
-        amountIn: amountIn.toString(),
-        path,
-      });
       setState(prev => ({
         ...prev,
         isApproving: false,
@@ -267,6 +209,6 @@ export function useGravityPayment(
     state,
     path,
     isPathLoading,
-    canPay: !!tokenIn && amountIn > 0n && !state.isPaying && !state.isApproving && !!path
+    canPay: !!tokenIn && amountIn > 0n && !state.isPaying && !state.isApproving && !!path && !!recipient
   };
 }
