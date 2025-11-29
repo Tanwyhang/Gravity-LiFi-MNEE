@@ -1,15 +1,8 @@
 "use client";
 
-import { ArrowLeft, Check, Upload } from "lucide-react"
+import { Check, Upload } from "lucide-react"
 import { AuroraBackground } from "@/components/ui/shadcn-io/aurora-background"
 import Link from "next/link"
-
-import dynamic from "next/dynamic";
-
-const WalletConnectButton = dynamic(
-  () => import("@/components/WalletConnectButton").then((mod) => mod.WalletConnectButton),
-  { ssr: false }
-);
 
 export default function CreatePage() {
 

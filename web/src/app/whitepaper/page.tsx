@@ -99,13 +99,16 @@ export default function Whitepaper() {
   const [currentDate, setCurrentDate] = useState<string>("");
 
   useEffect(() => {
-    const now = new Date();
-    const dateString = now.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-    setCurrentDate(dateString);
+    const timer = setTimeout(() => {
+      const now = new Date();
+      const dateString = now.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      setCurrentDate(dateString);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   // Scroll detection to update active section
@@ -220,7 +223,7 @@ export default function Whitepaper() {
               <div className="p-6 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 border border-border rounded-xl">
                 <p className="text-lg leading-relaxed text-foreground mb-4">
                   <strong>Gravity Protocol</strong> solves the cryptocurrency payment fragmentation crisis by enabling 
-                  universal token acceptance with unified MNEE settlement. Built on LiFi's battle-tested infrastructure, 
+                  universal token acceptance with unified MNEE settlement. Built on LiFi&apos;s battle-tested infrastructure, 
                   Gravity processes payments from <strong>1.2M+ ERC20 tokens</strong> across <strong>20+ blockchains</strong> 
                   through familiar Web2 interfaces—social links and QR codes.
                 </p>
@@ -259,7 +262,7 @@ export default function Whitepaper() {
                     <h3 className="font-semibold text-lg">$1M+ Bug Bounty</h3>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Built on LiFi's audited infrastructure with comprehensive security guarantees
+                    Built on LiFi&apos;s audited infrastructure with comprehensive security guarantees
                   </p>
                 </div>
               </div>
@@ -272,7 +275,7 @@ export default function Whitepaper() {
                   </h3>
                   <ul className="space-y-2 text-sm text-muted-foreground">
                     <li>• Merchants must choose which tokens to accept</li>
-                    <li>• Users often don't hold the required payment token</li>
+                    <li>• Users often don&apos;t hold the required payment token</li>
                     <li>• Managing 100+ token types creates accounting nightmares</li>
                     <li>• Traditional payment processors charge 2.9% + $0.30</li>
                     <li>• Cross-chain payments require technical expertise</li>
@@ -302,7 +305,7 @@ export default function Whitepaper() {
                   <div>
                     <h4 className="font-semibold mb-1">Universal Token Acceptance</h4>
                     <p className="text-sm text-muted-foreground">
-                      No more "we only accept ETH/USDC"—accept 1.2M+ tokens across 20+ chains with zero integration work
+                      No more &quot;we only accept ETH/USDC&quot;—accept 1.2M+ tokens across 20+ chains with zero integration work
                     </p>
                   </div>
                 </div>
@@ -361,7 +364,7 @@ export default function Whitepaper() {
               </p>
               
               <p className="text-muted-foreground leading-relaxed mb-8">
-                By leveraging <strong className="text-foreground">LiFi's multi-chain liquidity aggregation</strong> and the 
+                By leveraging <strong className="text-foreground">LiFi&apos;s multi-chain liquidity aggregation</strong> and the 
                 <strong className="text-foreground"> EIP-2535 Diamond Standard</strong>, Gravity eliminates the token fragmentation 
                 crisis that plagues cryptocurrency payments. Users can pay with any token they hold, while merchants receive 
                 unified settlements in MNEE, dramatically reducing operational complexity.
@@ -404,14 +407,16 @@ export default function Whitepaper() {
               <div>
                 <h3 className="text-2xl font-semibold mb-4">High-Level Overview</h3>
                 <p className="text-muted-foreground leading-relaxed mb-6">
-                  Gravity's architecture combines modern web technologies with sophisticated blockchain infrastructure. 
+                  Gravity&apos;s architecture combines modern web technologies with sophisticated blockchain infrastructure. 
                   The system consists of several interconnected layers working together to provide universal payment acceptance:
                 </p>
 
                 <div className="my-8 rounded-xl overflow-hidden border border-border">
-                  <img 
+                  <Image 
                     src="https://mintcdn.com/lifi/08FOM1AsMmrVbIEl/images/lifi-architecture.png?fit=max&auto=format&n=08FOM1AsMmrVbIEl&q=85&s=63e3d93ede3d25569bd5e492745a79d3"
                     alt="LiFi Architecture Overview" 
+                    width={1200}
+                    height={600}
                     className="w-full h-auto"
                   />
                 </div>
@@ -448,9 +453,11 @@ export default function Whitepaper() {
                 </p>
 
                 <div className="my-8 rounded-xl overflow-hidden border border-border">
-                  <img 
+                  <Image 
                     src="https://mintcdn.com/lifi/08FOM1AsMmrVbIEl/images/lifi-contract.png?fit=max&auto=format&n=08FOM1AsMmrVbIEl&q=85&s=3d60d0d021b75b7eb289639f5e148de1"
                     alt="LiFi Diamond Contract Flow" 
+                    width={1200}
+                    height={600}
                     className="w-full h-auto"
                   />
                 </div>
@@ -466,9 +473,11 @@ export default function Whitepaper() {
                 <h3 className="text-2xl font-semibold mb-4">Component Flow</h3>
                 
                 <div className="my-8 rounded-xl overflow-hidden border border-border">
-                  <img 
+                  <Image 
                     src="https://mintcdn.com/lifi/08FOM1AsMmrVbIEl/images/lifi-contract-helpers.png?fit=max&auto=format&n=08FOM1AsMmrVbIEl&q=85&s=08d2cc1baedb753105d65388fdffc144"
                     alt="LiFi Diamond Helper Contracts" 
+                    width={1200}
+                    height={600}
                     className="w-full h-auto"
                   />
                 </div>
@@ -529,7 +538,7 @@ graph TB
               <div>
                 <h3 className="text-2xl font-semibold mb-4">Multi-Chain Architecture</h3>
                 <p className="text-muted-foreground leading-relaxed mb-4">
-                  Gravity supports seamless cross-chain payments through LiFi's comprehensive bridge network:
+                  Gravity supports seamless cross-chain payments through LiFi&apos;s comprehensive bridge network:
                 </p>
                 
                 <MermaidDiagram chart={`
@@ -627,7 +636,7 @@ graph TB
               <div>
                 <h3 className="text-2xl font-semibold mb-4">Graph Theory Foundation</h3>
                 <p className="text-muted-foreground leading-relaxed mb-4">
-                  Gravity's routing engine models the entire DeFi liquidity landscape as a weighted directed graph, where:
+                  Gravity&apos;s routing engine models the entire DeFi liquidity landscape as a weighted directed graph, where:
                 </p>
 
                 <ul className="space-y-3 text-muted-foreground mb-6">
@@ -740,7 +749,7 @@ graph LR
 
                 <div className="bg-zinc-950 rounded-lg p-4 border border-zinc-800 font-mono text-sm overflow-x-auto">
                   <pre className="text-zinc-100">
-<span className="text-zinc-500">// Simplified Route Scoring Algorithm</span>
+<span className="text-zinc-500">{`// Simplified Route Scoring Algorithm`}</span>
 <span className="text-purple-400">function</span> <span className="text-blue-400">scoreRoute</span>(route: Route): <span className="text-blue-300">number</span> {'{'}{'\n'}
   <span className="text-purple-400">const</span> <span className="text-blue-300">gasCost</span> = route.steps.<span className="text-blue-400">reduce</span>((sum, step) {'=>'} {'\n'}
     sum + step.gasEstimate * gasPrice, <span className="text-yellow-400">0</span>{'\n'}
@@ -845,7 +854,7 @@ graph TD
               <div>
                 <h3 className="text-2xl font-semibold mb-4">Multi-Facet Architecture</h3>
                 <p className="text-muted-foreground leading-relaxed mb-4">
-                  Gravity leverages LiFi's comprehensive liquidity aggregation through specialized facet contracts:
+                  Gravity leverages LiFi&apos;s comprehensive liquidity aggregation through specialized facet contracts:
                 </p>
 
                 <ul className="space-y-3 text-muted-foreground mb-6">
@@ -865,14 +874,14 @@ graph TD
 
                 <div className="bg-zinc-950 rounded-lg p-4 border border-zinc-800 font-mono text-sm overflow-x-auto">
                   <pre className="text-zinc-100">
-<span className="text-zinc-500">// LiFi SDK Configuration</span>
+<span className="text-zinc-500">{`// LiFi SDK Configuration`}</span>
 <span className="text-purple-400">import</span> {'{ '}<span className="text-blue-400">createConfig</span>, <span className="text-blue-400">EVM</span> {'} '}
-<span className="text-purple-400">from</span> <span className="text-green-400">'@lifi/sdk'</span>;
+<span className="text-purple-400">from</span> <span className="text-green-400">&apos;@lifi/sdk&apos;</span>;
 <span className="text-purple-400">import</span> {'{ '}<span className="text-blue-400">getWalletClient</span>, <span className="text-blue-400">switchChain</span> {'} '}
-<span className="text-purple-400">from</span> <span className="text-green-400">'@wagmi/core'</span>;
+<span className="text-purple-400">from</span> <span className="text-green-400">&apos;@wagmi/core&apos;</span>;
 
 <span className="text-purple-400">export const</span> <span className="text-blue-300">lifiConfig</span> = <span className="text-blue-400">createConfig</span>({'{'}
-  <span className="text-cyan-400">integrator</span>: <span className="text-green-400">'Gravity'</span>,
+  <span className="text-cyan-400">integrator</span>: <span className="text-green-400">&apos;Gravity&apos;</span>,
   <span className="text-cyan-400">providers</span>: [
     <span className="text-blue-400">EVM</span>({'{'}
       <span className="text-cyan-400">getWalletClient</span>: () {'=>'} <span className="text-blue-400">getWalletClient</span>(wagmiConfig),
@@ -910,16 +919,16 @@ graph TD
 
                 <div className="bg-zinc-950 rounded-lg p-4 border border-zinc-800 font-mono text-sm overflow-x-auto">
                   <pre className="text-zinc-100">
-<span className="text-zinc-500">// Quote Request Flow</span>
+<span className="text-zinc-500">{`// Quote Request Flow`}</span>
 <span className="text-purple-400">const</span> <span className="text-blue-300">quoteRequest</span> = {'{'}
   <span className="text-cyan-400">fromChain</span>: tokenInChainId,
-  <span className="text-cyan-400">toChain</span>: <span className="text-orange-400">MNEE_CHAIN_ID</span>,        <span className="text-zinc-500">// Ethereum Mainnet (1)</span>
+  <span className="text-cyan-400">toChain</span>: <span className="text-orange-400">MNEE_CHAIN_ID</span>,        <span className="text-zinc-500">{`// Ethereum Mainnet (1)`}</span>
   <span className="text-cyan-400">fromToken</span>: tokenIn,
   <span className="text-cyan-400">toToken</span>: <span className="text-orange-400">MNEE_TOKEN_ADDRESS</span>,
   <span className="text-cyan-400">fromAmount</span>: amountInBigInt.<span className="text-blue-400">toString</span>(),
   <span className="text-cyan-400">fromAddress</span>: userAddress,
   <span className="text-cyan-400">toAddress</span>: recipientAddress,
-  <span className="text-cyan-400">slippage</span>: <span className="text-yellow-400">0.005</span>,               <span className="text-zinc-500">// 0.5% tolerance</span>
+  <span className="text-cyan-400">slippage</span>: <span className="text-yellow-400">0.005</span>,               <span className="text-zinc-500">{`// 0.5% tolerance`}</span>
 {'}'};
 
 <span className="text-purple-400">const</span> <span className="text-blue-300">quote</span> = <span className="text-purple-400">await</span> <span className="text-blue-400">getQuote</span>(quoteRequest);
@@ -953,7 +962,7 @@ graph TD
                   </li>
                   <li className="flex gap-2">
                     <ChevronRight className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span>MNEE tokens are delivered to merchant's recipient address</span>
+                    <span>MNEE tokens are delivered to merchant&apos;s recipient address</span>
                   </li>
                 </ul>
               </div>
@@ -1047,7 +1056,7 @@ graph TD
                 <ol className="space-y-3 text-muted-foreground mb-6">
                   <li className="flex gap-2">
                     <span className="font-bold text-foreground">1.</span>
-                    <span><strong className="text-foreground">Token Price Fetch:</strong> Query token price from LiFi's aggregated price oracles</span>
+                    <span><strong className="text-foreground">Token Price Fetch:</strong> Query token price from LiFi&apos;s aggregated price oracles</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="font-bold text-foreground">2.</span>
@@ -1067,7 +1076,7 @@ graph TD
               <div>
                 <h3 className="text-2xl font-semibold mb-4">Route Selection</h3>
                 <p className="text-muted-foreground leading-relaxed mb-4">
-                  LiFi's routing algorithm considers multiple factors to select the optimal path:
+                  LiFi&apos;s routing algorithm considers multiple factors to select the optimal path:
                 </p>
 
                 <ul className="space-y-3 text-muted-foreground">
@@ -1150,7 +1159,7 @@ graph TD
               <div>
                 <h3 className="text-2xl font-semibold mb-4">Smart Contract Security</h3>
                 <p className="text-muted-foreground leading-relaxed mb-4">
-                  Gravity's security foundation is built on LiFi's audited infrastructure:
+                  Gravity&apos;s security foundation is built on LiFi&apos;s audited infrastructure:
                 </p>
 
                 <ul className="space-y-3 text-muted-foreground">
@@ -1254,7 +1263,7 @@ graph TD
               <div>
                 <h3 className="text-2xl font-semibold mb-4">Value Accrual</h3>
                 <p className="text-muted-foreground leading-relaxed mb-4">
-                  MNEE's value proposition is driven by constant buy pressure from the universal payment infrastructure:
+                  MNEE&apos;s value proposition is driven by constant buy pressure from the universal payment infrastructure:
                 </p>
 
                 <ul className="space-y-3 text-muted-foreground">
@@ -1333,13 +1342,13 @@ graph TD
                     </p>
                     
                     <div className="bg-zinc-950 rounded-lg p-4 border border-zinc-800 font-mono text-xs overflow-x-auto mb-4">
-                      <div className="text-zinc-400">// Integration Example</div>
+                      <div className="text-zinc-400">{`// Integration Example`}</div>
                       <div className="text-zinc-100 mt-2">
                         <span className="text-purple-400">const</span> <span className="text-blue-300">paymentLink</span> = <span className="text-purple-400">await</span> gravity.<span className="text-blue-400">createPaymentLink</span>({'{'}{'\n'}
-                        {'  '}<span className="text-cyan-400">amount</span>: <span className="text-yellow-400">500</span>, <span className="text-zinc-500">// $500 USD</span>{'\n'}
+                        {'  '}<span className="text-cyan-400">amount</span>: <span className="text-yellow-400">500</span>, <span className="text-zinc-500">{`// $500 USD`}</span>{'\n'}
                         {'  '}<span className="text-cyan-400">recipient</span>: freelancerWalletAddress,{'\n'}
-                        {'  '}<span className="text-cyan-400">description</span>: <span className="text-green-400">"Website Design Project"</span>,{'\n'}
-                        {'  '}<span className="text-cyan-400">settlementToken</span>: <span className="text-green-400">"MNEE"</span>{'\n'}
+                        {'  '}<span className="text-cyan-400">description</span>: <span className="text-green-400">&quot;Website Design Project&quot;</span>,{'\n'}
+                        {'  '}<span className="text-cyan-400">settlementToken</span>: <span className="text-green-400">&quot;MNEE&quot;</span>{'\n'}
                         {'}'});
                       </div>
                     </div>
@@ -1381,8 +1390,8 @@ graph TD
 
                   <div className="p-4 bg-blue-500/5 border-l-4 border-blue-500 rounded-r-lg">
                     <p className="text-sm text-muted-foreground italic">
-                      "Gravity transformed our payment infrastructure. Freelancers love the instant settlements, and we've 
-                      saved over $120,000 in processing fees in the first quarter alone." 
+                      &quot;Gravity transformed our payment infrastructure. Freelancers love the instant settlements, and we&apos;ve 
+                      saved over $120,000 in processing fees in the first quarter alone.&quot; 
                       <span className="block mt-2 text-xs text-blue-400">— CTO, Global Freelance Platform</span>
                     </p>
                   </div>
@@ -1407,7 +1416,7 @@ graph TD
                       <li>• Managing 100+ token types across 5 chains was operationally complex</li>
                       <li>• Price volatility risk when holding diverse token portfolio</li>
                       <li>• High gas fees on Ethereum mainnet deterred small purchases</li>
-                      <li>• Customers on L2s couldn't easily purchase NFTs priced in ETH</li>
+                      <li>• Customers on L2s couldn&apos;t easily purchase NFTs priced in ETH</li>
                     </ul>
                   </div>
 
@@ -1552,8 +1561,8 @@ graph TD
 
                   <div className="p-4 bg-purple-500/5 border-l-4 border-purple-500 rounded-r-lg">
                     <p className="text-sm text-muted-foreground italic">
-                      "Gravity made our ticketing seamless. Attendees loved paying with their preferred tokens, and we 
-                      eliminated the 15% Eventbrite fee. The QR code system worked flawlessly for 10,000 check-ins." 
+                      &quot;Gravity made our ticketing seamless. Attendees loved paying with their preferred tokens, and we 
+                      eliminated the 15% Eventbrite fee. The QR code system worked flawlessly for 10,000 check-ins.&quot; 
                       <span className="block mt-2 text-xs text-purple-400">— Event Organizer, ETHGlobal Conference</span>
                     </p>
                   </div>
@@ -1919,7 +1928,7 @@ graph TD
                     Gravity implements comprehensive failure handling at every step:
                   </p>
                   <ul className="space-y-3 ml-4">
-                    <li className="leading-relaxed">• <strong>Bridge Failures:</strong> If a cross-chain bridge fails, the transaction is automatically reverted and funds are returned to the user's wallet</li>
+                    <li className="leading-relaxed">• <strong>Bridge Failures:</strong> If a cross-chain bridge fails, the transaction is automatically reverted and funds are returned to the user&apos;s wallet</li>
                     <li className="leading-relaxed">• <strong>DEX Swap Failures:</strong> Slippage protection ensures swaps only execute within tolerance. Failed swaps trigger automatic refunds</li>
                     <li className="leading-relaxed">• <strong>Gas Estimation:</strong> Pre-flight checks verify sufficient gas before execution to minimize mid-transaction failures</li>
                     <li className="leading-relaxed">• <strong>Retry Mechanism:</strong> Users can retry failed transactions with alternative routes suggested by the system</li>
@@ -1960,7 +1969,7 @@ graph TD
                   </p>
                   <ul className="space-y-3 ml-4">
                     <li className="leading-relaxed">• <strong>Before Execution:</strong> You can cancel anytime before approving the transaction in your wallet</li>
-                    <li className="leading-relaxed">• <strong>After Execution:</strong> Refunds depend on the merchant's policy. Merchants can initiate refunds by sending MNEE back to your address</li>
+                    <li className="leading-relaxed">• <strong>After Execution:</strong> Refunds depend on the merchant&apos;s policy. Merchants can initiate refunds by sending MNEE back to your address</li>
                     <li className="leading-relaxed">• <strong>Merchant Tools:</strong> Our dashboard provides one-click refund functionality for merchants</li>
                     <li className="leading-relaxed">• <strong>Dispute Resolution:</strong> For high-value transactions, merchants can optionally use escrow smart contracts</li>
                   </ul>
@@ -1969,7 +1978,7 @@ graph TD
 
               <details className="group border border-border rounded-lg overflow-hidden bg-white">
                 <summary className="p-6 cursor-pointer font-semibold hover:bg-muted transition-colors flex justify-between items-center">
-                  <span className="text-base">What's the maximum transaction size?</span>
+                  <span className="text-base">What&apos;s the maximum transaction size?</span>
                   <ChevronRight className="w-5 h-5 transition-transform group-open:rotate-90 flex-shrink-0 ml-4" />
                 </summary>
                 <div className="px-6 pb-6 pt-4 text-sm text-muted-foreground border-t border-border">
@@ -2029,10 +2038,10 @@ graph TD
                     <li className="leading-relaxed">• <strong>QR Codes:</strong> Mobile-friendly payment experience</li>
                     <li className="leading-relaxed">• <strong>Receipt Generation:</strong> Cryptographic proof of payment for accounting</li>
                     <li className="leading-relaxed">• <strong>Merchant Dashboard:</strong> Track all payments, analytics, and revenue in one place</li>
-                    <li className="leading-relaxed">• <strong>No Technical Knowledge:</strong> Users don't need to understand bridges, DEXs, or routing</li>
+                    <li className="leading-relaxed">• <strong>No Technical Knowledge:</strong> Users don&apos;t need to understand bridges, DEXs, or routing</li>
                   </ul>
                   <p className="mt-4 leading-relaxed italic">
-                    Think of Gravity as "Stripe for crypto" rather than just a swap aggregator.
+                    Think of Gravity as &quot;Stripe for crypto&quot; rather than just a swap aggregator.
                   </p>
                 </div>
               </details>

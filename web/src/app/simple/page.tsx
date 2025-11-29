@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo, useRef, useEffect } from "react"
 import { useAccount } from "wagmi"
-import { Eye, ArrowLeft, Copy, X } from "lucide-react"
+import { Eye, Copy, X } from "lucide-react"
 import { Slider } from "@/components/ui/slider"
 import { Spinner } from "@/components/ui/shadcn-io/spinner"
 import { QRCode } from "@/components/ui/shadcn-io/qr-code"
@@ -10,8 +10,9 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { QRDownload } from "@/components/ui/qr-download"
 import { toast } from "sonner"
-import Link from "next/link"
+
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 
 interface PaymentConfig {
   template: 'simple'
@@ -115,16 +116,7 @@ export default function SimplePage() {
     setConfig(prev => ({ ...prev, [key]: value }))
   }, [])
 
-  const validateUSDAmount = useCallback((value: string) => {
-    // Only allow numbers and decimal point
-    const cleanValue = value.replace(/[^0-9.]/g, '')
-    // Ensure only one decimal point
-    const parts = cleanValue.split('.')
-    if (parts.length > 2) {
-      return parts[0] + '.' + parts.slice(1).join('')
-    }
-    return cleanValue
-  }, [])
+
 
   const applyTheme = (theme: keyof typeof themes) => {
     const themeConfig = themes[theme]
@@ -308,10 +300,11 @@ export default function SimplePage() {
           <div className="flex justify-center mb-6">
              <div className="w-full rounded-lg overflow-hidden relative" style={{ borderRadius: `${Math.min(config.borderRadius / 2, 8)}px` }}>
                 <div className="aspect-video w-full">
-                  <img
+                  <Image
                     src={config.customThumbnail}
                     alt="Merchant logo"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                 </div>
              </div>
@@ -493,7 +486,7 @@ export default function SimplePage() {
           </div>
       </div>
     )
-  }, [config, updateConfig, paymentStatus, transactionHash, handlePayment])
+  }, [config, updateConfig, paymentStatus, handlePayment])
 
   return (
     <div className="min-h-screen bg-background text-foreground font-mono">

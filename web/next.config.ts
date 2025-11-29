@@ -51,6 +51,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'mwtzwo37egeya3fd.public.blob.vercel-storage.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'mintcdn.com',
+      },
     ],
   },
 };

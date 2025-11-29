@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { toast } from 'sonner';
 import { Download } from 'lucide-react';
 
@@ -21,7 +21,6 @@ export const QRDownload: React.FC<QRDownloadProps> = ({
   tokenSymbol = '',
   className = "",
   style = {},
-  qrData
 }) => {
   const handleDownload = () => {
     if (qrCodeRef.current) {

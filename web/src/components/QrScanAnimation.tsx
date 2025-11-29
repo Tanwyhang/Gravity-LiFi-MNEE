@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion"
 import { useEffect, useState } from "react"
-import { Scan, CheckCircle2, Smartphone, QrCode } from "lucide-react"
+import { Scan, CheckCircle2, QrCode } from "lucide-react"
 
 import { Iphone15Pro } from "@/components/ui/shadcn-io/iphone-15-pro"
 

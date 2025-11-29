@@ -109,6 +109,32 @@ export function PaymentModal({ isOpen, onClose, amountUSD, eventId = "1", config
     return luminance > 0.5 ? '#000000' : '#ffffff';
   };
 
+  const { isConnected } = useAccount();
+  const [selectedToken, setSelectedToken] = React.useState<Token | undefined>();
+  const [showSuccessModal, setShowSuccessModal] = React.useState(false);
+
+  const { pay, state, quote, estimatedAmountIn } = useLiFiPayment(
+    selectedToken?.address,
+    selectedToken?.chainId,
+    amountUSD,
+    styles.recipientAddress
+  );
+
+  // Show success modal when payment is complete
+  React.useEffect(() => {
+    if (state.txHash && !state.isPaying && !state.error) {
+      setShowSuccessModal(true);
+    }
+  }, [state.txHash, state.isPaying, state.error]);
+
+  // Reset state when closed
+  React.useEffect(() => {
+    if (!isOpen && !inline) {
+      setSelectedToken(undefined);
+      setShowSuccessModal(false);
+    }
+  }, [isOpen, inline]);
+
   if (preview) {
     return (
       <Card
@@ -221,32 +247,6 @@ export function PaymentModal({ isOpen, onClose, amountUSD, eventId = "1", config
       </Card>
     );
   }
-
-  const { isConnected } = useAccount();
-  const [selectedToken, setSelectedToken] = React.useState<Token | undefined>();
-  const [showSuccessModal, setShowSuccessModal] = React.useState(false);
-
-  const { pay, state, quote, estimatedAmountIn } = useLiFiPayment(
-    selectedToken?.address,
-    selectedToken?.chainId,
-    amountUSD,
-    styles.recipientAddress
-  );
-
-  // Show success modal when payment is complete
-  React.useEffect(() => {
-    if (state.txHash && !state.isPaying && !state.error) {
-      setShowSuccessModal(true);
-    }
-  }, [state.txHash, state.isPaying, state.error]);
-
-  // Reset state when closed
-  React.useEffect(() => {
-    if (!isOpen && !inline) {
-      setSelectedToken(undefined);
-      setShowSuccessModal(false);
-    }
-  }, [isOpen, inline]);
 
   if (!isOpen && !inline) return null;
 

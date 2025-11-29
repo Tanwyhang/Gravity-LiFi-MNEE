@@ -1,17 +1,20 @@
-import { Address, createPublicClient, http } from 'viem';
-import { sepolia } from 'viem/chains';
-import { TOKEN_ROUTER_ADDRESS } from '@/contracts/addresses';
-import TokenRouterABI from '@/contracts/abis/TokenRouter.json';
+import { Address } from 'viem';
+// import { createPublicClient, http } from 'viem';
+// import { sepolia } from 'viem/chains';
+// import { TOKEN_ROUTER_ADDRESS } from '@/contracts/addresses';
+// import TokenRouterABI from '@/contracts/abis/TokenRouter.json';
 
 // Use custom RPC if available, otherwise use public endpoint
-const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || 'https://sepolia.infura.io/v3/268702a6f88b4111a031782c39503bc0';
+// const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || 'https://sepolia.infura.io/v3/268702a6f88b4111a031782c39503bc0';
 
+/*
 const publicClient = createPublicClient({
   chain: sepolia,
   transport: http(rpcUrl, {
     batch: false, // Disable batching for immediate results
   }),
 });
+*/
 
 /**
  * Find optimal route between two tokens using BFS

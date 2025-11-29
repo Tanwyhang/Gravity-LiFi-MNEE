@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo, useRef, useEffect } from "react"
 import { useAccount } from "wagmi"
-import { Upload, Eye, ArrowLeft, Copy, Download, X } from "lucide-react"
+import { Upload, Eye, Copy, Download, X } from "lucide-react"
 import { Spinner } from "@/components/ui/shadcn-io/spinner"
 import { Slider } from "@/components/ui/slider"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
@@ -11,8 +11,8 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { QRDownload } from "@/components/ui/qr-download"
 import { toast } from "sonner"
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import NextImage from "next/image"
 
 interface PaymentConfig {
   template: 'thumbnail'
@@ -39,12 +39,7 @@ interface PaymentConfig {
   showQRCode: boolean
 }
 
-import dynamic from "next/dynamic";
 
-const WalletConnectButton = dynamic(
-  () => import("@/components/WalletConnectButton").then((mod) => mod.WalletConnectButton),
-  { ssr: false }
-);
 
 export default function CustomThumbnailPage() {
   const [isProcessing, setIsProcessing] = useState(false)
@@ -124,16 +119,7 @@ export default function CustomThumbnailPage() {
     setConfig(prev => ({ ...prev, [key]: value }))
   }, [])
 
-  const validateUSDAmount = useCallback((value: string) => {
-    // Only allow numbers and decimal point
-    const cleanValue = value.replace(/[^0-9.]/g, '')
-    // Ensure only one decimal point
-    const parts = cleanValue.split('.')
-    if (parts.length > 2) {
-      return parts[0] + '.' + parts.slice(1).join('')
-    }
-    return cleanValue
-  }, [])
+
 
   const applyTheme = (theme: keyof typeof themes) => {
     const themeConfig = themes[theme]
@@ -373,10 +359,11 @@ export default function CustomThumbnailPage() {
             {config.customThumbnail ? (
               <div className="w-full rounded-lg overflow-hidden relative group bg-black/5" style={{ borderRadius: `${Math.min(config.borderRadius / 2, 8)}px` }}>
                 <AspectRatio ratio={16 / 9} className="flex items-center justify-center">
-                  <img
+                  <NextImage
                     src={config.customThumbnail}
                     alt="Merchant logo"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                 </AspectRatio>
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
@@ -592,7 +579,7 @@ export default function CustomThumbnailPage() {
           </div>
       </div>
     )
-  }, [config, updateConfig, paymentStatus, transactionHash, handlePayment, handleImageUpload])
+  }, [config, updateConfig, paymentStatus, handlePayment, handleImageUpload, isUploading])
 
   return (
     <div className="min-h-screen bg-background text-foreground font-mono">

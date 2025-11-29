@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import Image from 'next/image';
 import { Address } from 'viem';
 import { Search, Loader2 } from 'lucide-react';
 import {
@@ -9,7 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { getTokens, ChainId, TokensResponse } from '@lifi/sdk';
+import { getTokens, ChainId } from '@lifi/sdk';
 
 export interface Token {
   address: Address;
@@ -101,7 +102,7 @@ export function TokenSelector({ selectedToken, onSelect, className }: TokenSelec
           {selectedToken ? (
             <div className="flex items-center gap-2">
               {selectedToken.logoURI && (
-                <img src={selectedToken.logoURI} alt={selectedToken.symbol} className="w-5 h-5 rounded-full" />
+                <Image src={selectedToken.logoURI} alt={selectedToken.symbol} width={20} height={20} className="rounded-full" unoptimized />
               )}
               <span className="font-medium">{selectedToken.symbol}</span>
               <span className="text-xs text-muted-foreground bg-secondary px-1 rounded">
@@ -149,7 +150,7 @@ export function TokenSelector({ selectedToken, onSelect, className }: TokenSelec
                   <div className="flex items-center justify-between w-full gap-2">
                     <div className="flex items-center gap-2 overflow-hidden">
                       {token.logoURI ? (
-                        <img src={token.logoURI} alt={token.symbol} className="w-6 h-6 rounded-full" />
+                        <Image src={token.logoURI} alt={token.symbol} width={24} height={24} className="rounded-full" unoptimized />
                       ) : (
                         <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs">
                           {token.symbol[0]}

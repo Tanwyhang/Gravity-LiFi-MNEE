@@ -3,7 +3,6 @@ import { useAccount, useWalletClient, useSwitchChain } from 'wagmi';
 import { getQuote, executeRoute, Route, getToken, convertQuoteToRoute } from '@lifi/sdk';
 import { Address, parseUnits, formatUnits } from 'viem';
 import { MNEE_TOKEN_ADDRESS } from '@/contracts/addresses';
-import { lifiConfig } from '@/lib/lifi';
 
 // MNEE is deployed on Ethereum Mainnet
 const MNEE_CHAIN_ID = 1; // Ethereum Mainnet

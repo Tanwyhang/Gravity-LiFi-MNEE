@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { AuroraBackground } from "@/components/ui/shadcn-io/aurora-background";
@@ -14,11 +14,7 @@ const PaymentModal = dynamic(
 function PaymentContent() {
   const params = useParams();
   const searchParams = useSearchParams();
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    setIsOpen(true);
-  }, []);
+  const [isOpen] = useState(true);
 
   // Parse theme parameters from URL using the theme system
   const urlConfig = parseUrlThemeParams(searchParams);

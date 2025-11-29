@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { X, Download, Share2, CheckCircle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { X, Share2, CheckCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { QRCode } from '@/components/ui/shadcn-io/qr-code';

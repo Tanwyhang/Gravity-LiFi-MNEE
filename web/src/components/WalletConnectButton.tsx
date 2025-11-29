@@ -4,6 +4,8 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Button } from '@/components/ui/button';
 import { Wallet } from 'lucide-react';
 
+import Image from 'next/image';
+
 export function WalletConnectButton() {
   return (
     <ConnectButton.Custom>
@@ -81,10 +83,13 @@ export function WalletConnectButton() {
                         }}
                       >
                         {chain.iconUrl && (
-                          <img
+                          <Image
                             alt={chain.name ?? 'Chain icon'}
                             src={chain.iconUrl}
+                            width={12}
+                            height={12}
                             className="w-full h-full"
+                            unoptimized
                           />
                         )}
                       </div>

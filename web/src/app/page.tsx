@@ -161,7 +161,7 @@ export default function Home() {
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-              >
+              > 
                 <Link 
                   href="/whitepaper"
                   className="border border-border px-8 py-3 text-sm font-bold transition-colors bg-white inline-block"
@@ -308,7 +308,7 @@ export default function Home() {
             </div>
 
             {/* Floating App Mockup */}
-            <h4 className="text-sm font-mono text-muted-foreground mb-8 tracking-widest uppercase mt-20 text-center">[ CREATOR's CONSOLE ]</h4>
+            <h4 className="text-sm font-mono text-muted-foreground mb-8 tracking-widest uppercase mt-20 text-center">[ CREATOR&apos;s CONSOLE ]</h4>
             <div className="relative w-full max-w-5xl mx-auto mb-20 px-4 [perspective:2000px]">
               <div className="relative rounded-xl border border-border bg-card/50 backdrop-blur-xl p-2 shadow-2xl transition-all duration-1000 ease-out hover:[transform:rotateX(0deg)] [transform:rotateX(20deg)] group">
                 <div className="rounded-lg border border-border bg-background/80 p-4 h-[400px] overflow-hidden relative">
@@ -600,7 +600,7 @@ export default function Home() {
                         </div>
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        "{testimonial.review}"
+                        &quot;{testimonial.review}&quot;
                       </p>
                     </div>
                   ))}

@@ -1,7 +1,9 @@
-import { createPublicClient, http, Address, getAddress } from 'viem';
-import { sepolia } from 'viem/chains';
+// import { createPublicClient, http, Address, getAddress } from 'viem';
+// import { sepolia } from 'viem/chains';
+import { Address, getAddress } from 'viem';
 
 // Uniswap V3 Pool ABI - only the functions we need
+/*
 const POOL_ABI = [
   {
     inputs: [],
@@ -33,16 +35,19 @@ const POOL_ABI = [
     type: 'function',
   },
 ] as const;
+*/
 
 // Properly checksummed addresses
 const WETH_ADDRESS = getAddress('0xfff9976782d46cc05630d1f6ebab18b2324d6b14');
 const USDC_ADDRESS = getAddress('0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238');
-const UNI_ADDRESS = getAddress('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984');
+// const UNI_ADDRESS = getAddress('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984');
 
 // Uniswap V3 pools on Sepolia testnet (verified addresses)
+/*
 const UNISWAP_V3_POOLS: Record<string, Address> = {
   [UNI_ADDRESS.toLowerCase()]: getAddress('0x287B0e934ed0439E2a7b1d5F0FC25eA2c24b64f7'),
 };
+*/
 
 // Fallback prices for tokens without pools
 const FALLBACK_PRICES: Record<string, number> = {
@@ -51,6 +56,7 @@ const FALLBACK_PRICES: Record<string, number> = {
 };
 
 // Get RPC URL from environment or use default Sepolia endpoint
+/*
 const getRpcUrl = () => {
   const envUrl = process.env.NEXT_PUBLIC_RPC_URL;
   const defaultUrl = 'https://rpc.sepolia.org';
@@ -68,16 +74,19 @@ const publicClient = createPublicClient({
   chain: sepolia,
   transport: http(getRpcUrl()),
 });
+*/
 
 /**
  * Calculate price from Uniswap V3 sqrtPriceX96
  */
+/*
 function sqrtPriceX96ToPrice(sqrtPriceX96: bigint, token0Decimals: number, token1Decimals: number): number {
   const Q96 = 2n ** 96n;
   const price = (Number(sqrtPriceX96) / Number(Q96)) ** 2;
   const decimalAdjustment = 10 ** (token0Decimals - token1Decimals);
   return price * decimalAdjustment;
 }
+*/
 
 /**
  * Get token price in USD using Uniswap V3 on Sepolia
