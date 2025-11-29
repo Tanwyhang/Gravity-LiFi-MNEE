@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "./providers";
+import { Navbar } from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +26,8 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
 };
 
+import { headers } from "next/headers";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,6 +39,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
+          <Navbar />
           {children}
           <Toaster />
         </Providers>

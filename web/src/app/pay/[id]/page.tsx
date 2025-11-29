@@ -2,9 +2,14 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import { PaymentModal } from "@/components/PaymentModal";
+import dynamic from "next/dynamic";
 import { AuroraBackground } from "@/components/ui/shadcn-io/aurora-background";
 import { parseUrlThemeParams } from "@/lib/themes";
+
+const PaymentModal = dynamic(
+  () => import("@/components/PaymentModal").then((mod) => mod.PaymentModal),
+  { ssr: false }
+);
 
 function PaymentContent() {
   const params = useParams();
@@ -28,6 +33,7 @@ function PaymentContent() {
             amountUSD={searchParams.get('usdAmount') || searchParams.get('ua') || urlConfig.usdAmount || "124.50"}
             eventId={params.id as string}
             config={urlConfig}
+            inline={true}
         />
     </div>
   );

@@ -8,6 +8,8 @@ import { Card } from '@/components/ui/card';
 import { QRCode } from '@/components/ui/shadcn-io/qr-code';
 import { QRDownload } from '@/components/ui/qr-download';
 
+import { useRouter } from 'next/navigation';
+
 export interface PaymentSuccessModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -37,6 +39,7 @@ export function PaymentSuccessModal({
   eventId,
   config
 }: PaymentSuccessModalProps) {
+  const router = useRouter();
   const qrCodeRef = React.useRef<HTMLDivElement>(null);
 
   // Default styles if config is missing
@@ -324,15 +327,15 @@ export function PaymentSuccessModal({
                 transition={{ duration: 0.15, delay: 0.38 }}
               >
                 <Button
-                  onClick={onClose}
-                  className="w-full h-12"
+                  onClick={() => router.push('/dashboard')}
+                  className="w-full h-12 font-bold tracking-wider"
                   style={{
                     backgroundColor: styles.primaryColor,
                     color: '#ffffff',
                     borderRadius: styles.borderRadius
                   }}
                 >
-                  Done
+                  [ DASHBOARD ]
                 </Button>
               </motion.div>
             </div>

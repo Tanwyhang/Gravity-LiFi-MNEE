@@ -37,9 +37,10 @@ interface PaymentModalProps {
   eventId?: string;
   config?: PaymentModalConfig;
   inline?: boolean;
+  preview?: boolean;
 }
 
-export function PaymentModal({ isOpen, onClose, amountUSD, eventId = "1", config, inline = false }: PaymentModalProps) {
+export function PaymentModal({ isOpen, onClose, amountUSD, eventId = "1", config, inline = false, preview = false }: PaymentModalProps) {
   const styles = {
     backgroundColor: config?.backgroundColor || '#09090b',
     primaryColor: config?.primaryColor || '#6366f1',
@@ -108,7 +109,7 @@ export function PaymentModal({ isOpen, onClose, amountUSD, eventId = "1", config
     return luminance > 0.5 ? '#000000' : '#ffffff';
   };
 
-  if (inline) {
+  if (preview) {
     return (
       <Card
         className="relative overflow-hidden shadow-2xl transform-gpu"

@@ -101,6 +101,10 @@ export const QRCodeComponent = ({
     return () => observer.disconnect();
   }, [size]);
 
+  if (!data) {
+    return null;
+  }
+
   return (
     <div
       ref={containerRef}

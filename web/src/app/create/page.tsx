@@ -1,22 +1,21 @@
+"use client";
+
 import { ArrowLeft, Check, Upload } from "lucide-react"
 import { AuroraBackground } from "@/components/ui/shadcn-io/aurora-background"
 import Link from "next/link"
+
+import dynamic from "next/dynamic";
+
+const WalletConnectButton = dynamic(
+  () => import("@/components/WalletConnectButton").then((mod) => mod.WalletConnectButton),
+  { ssr: false }
+);
 
 export default function CreatePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-mono">
-      <header className="border-b border-border p-4 sticky top-0 bg-background/80 backdrop-blur-sm z-50">
-        <div className="container mx-auto flex items-center">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-sm hover:text-foreground/70 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            BACK_HOME
-          </Link>
-        </div>
-      </header>
+
 
       <main className="relative">
         <AuroraBackground className="min-h-[calc(100vh-5rem)]">

@@ -325,7 +325,7 @@ export default function SimplePage() {
                 type="text"
                 value={config.customTitle}
                 onChange={(e) => updateConfig('customTitle', e.target.value)}
-                className="font-bold text-sm bg-transparent border-2 border-transparent hover:border-gray-300 focus:border-current rounded px-2 py-1 outline-none transition-colors"
+                className="font-bold text-sm bg-transparent border-2 border-transparent hover:border-black focus:border-current rounded px-2 py-1 outline-none transition-colors"
                 style={{ color: config.primaryColor }}
                 placeholder="PAYMENT_TITLE"
               />
@@ -333,7 +333,7 @@ export default function SimplePage() {
                 type="text"
                 value={config.merchantName}
                 onChange={(e) => updateConfig('merchantName', e.target.value)}
-                className="text-xs bg-transparent border-2 border-transparent hover:border-gray-300 focus:border-current rounded px-2 py-1 outline-none transition-colors"
+                className="text-xs bg-transparent border-2 border-transparent hover:border-black focus:border-current rounded px-2 py-1 outline-none transition-colors"
                 style={{ color: config.primaryColor, opacity: 0.8 }}
                 placeholder="Merchant Name"
               />
@@ -343,7 +343,7 @@ export default function SimplePage() {
                 type="text"
                 value={config.transactionId}
                 onChange={(e) => updateConfig('transactionId', e.target.value)}
-                className="text-xs font-mono bg-transparent border-2 border-transparent hover:border-gray-300 focus:border-current rounded px-2 py-1 outline-none transition-colors text-right truncate max-w-[100px]"
+                className="text-xs font-mono bg-transparent border-2 border-transparent hover:border-black focus:border-current rounded px-2 py-1 outline-none transition-colors text-right truncate max-w-[100px]"
                 style={{ color: config.primaryColor, opacity: 0.6 }}
                 placeholder="#TXN_ID"
               />
@@ -360,7 +360,7 @@ export default function SimplePage() {
                 type="text"
                 value={config.tokenSymbol}
                 onChange={(e) => updateConfig('tokenSymbol', e.target.value)}
-                className="bg-transparent border-2 border-transparent hover:border-gray-300 focus:border-current rounded px-1 py-0.5 outline-none transition-colors text-center font-bold"
+                className="bg-transparent border-2 border-transparent hover:border-black focus:border-current rounded px-1 py-0.5 outline-none transition-colors text-center font-bold"
                 style={{ color: config.primaryColor, opacity: 0.9, width: '40px' }}
                 placeholder="TOKEN"
               />
@@ -375,7 +375,7 @@ export default function SimplePage() {
               <input
                 type="number"
                 value={config.usdAmount}
-                className="text-4xl font-bold tracking-tighter bg-transparent border-2 border-transparent hover:border-gray-300 focus:opacity-70 rounded pl-10 pr-3 py-1 text-center w-48 outline-none transition-all cursor-text"
+                className="text-4xl font-bold tracking-tighter bg-transparent border-2 border-transparent hover:border-black focus:opacity-70 rounded pl-10 pr-3 py-1 text-center w-48 outline-none transition-all cursor-text"
                 style={{
                   color: config.primaryColor,
                   borderColor: config.primaryColor + '20',
@@ -497,17 +497,7 @@ export default function SimplePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-mono">
-      <header className="border-b border-border p-3 md:p-4 sticky top-0 bg-background/80 backdrop-blur-sm z-50">
-        <div className="container mx-auto flex items-center">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-xs md:text-sm hover:text-foreground/70 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            BACK
-          </Link>
-        </div>
-      </header>
+
 
       <main className="relative">
         <section className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-8 sm:pb-12 relative z-10">
@@ -713,7 +703,7 @@ export default function SimplePage() {
                   setPaymentStatus('idle')
                   setTransactionHash(null)
                 }}
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 transition-colors"
+                className="absolute top-2 right-2 text-black/50 hover:text-black transition-colors"
                 style={{ color: config.primaryColor + '80' }}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -745,7 +735,7 @@ export default function SimplePage() {
                         />
                       </div>
                     </div>
-                    <p className="text-xs text-center text-gray-600 animate-in fade-in duration-500 delay-300 max-w-xs mx-auto mb-4">
+                    <p className="text-xs text-center text-black/60 animate-in fade-in duration-500 delay-300 max-w-xs mx-auto mb-4">
                       Scan QR to view transaction on Etherscan
                     </p>
                   </>
@@ -758,7 +748,7 @@ export default function SimplePage() {
                   >
                     TRANSACTION_HASH
                   </div>
-                  <div className="text-xs font-mono break-all bg-gray-50 p-2 rounded">
+                  <div className="text-xs font-mono break-all bg-black/5 p-2 rounded">
                     {transactionHash}
                   </div>
                   <div className={config.showQRCode ? "grid grid-cols-2 gap-2" : ""}>
@@ -812,7 +802,7 @@ export default function SimplePage() {
                     color: getLuminance(config.primaryColor) > 0.5 ? '#000000' : '#ffffff'
                   }}
                 >
-                  DONE
+                  [ DASHBOARD ]
                 </button>
               </div>
             </div>

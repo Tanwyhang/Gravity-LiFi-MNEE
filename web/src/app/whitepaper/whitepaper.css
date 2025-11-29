@@ -1,0 +1,41 @@
+/* Force black and white theme for whitepaper - NO GREY ALLOWED */
+.whitepaper-container {
+    background-color: #fff !important;
+    color: #000 !important;
+}
+
+/* Apply black/white to text elements but NOT to SVG internals */
+.whitepaper-container h1,
+.whitepaper-container h2,
+.whitepaper-container h3,
+.whitepaper-container h4,
+.whitepaper-container h5,
+.whitepaper-container h6,
+.whitepaper-container p,
+.whitepaper-container li,
+.whitepaper-container span,
+.whitepaper-container div:not([class*="mermaid"]) {
+    color: #000 !important;
+}
+
+/* Override any muted/grey backgrounds specifically */
+.whitepaper-container .bg-muted,
+.whitepaper-container .bg-muted\/30,
+.whitepaper-container .bg-zinc-950,
+.whitepaper-container .bg-zinc-950\/50,
+.whitepaper-container [class*="bg-gray"],
+.whitepaper-container [class*="bg-grey"],
+.whitepaper-container [class*="bg-zinc"]:not([class*="mermaid"]),
+.whitepaper-container [class*="bg-slate"] {
+    background-color: #fff !important;
+}
+
+/* Ensure borders are black */
+.whitepaper-container *:not(svg):not(path):not(rect):not(circle):not(ellipse):not(polygon) {
+    border-color: #000 !important;
+}
+
+/* Remove background images */
+.whitepaper-container *:not(svg) {
+    background-image: none !important;
+}

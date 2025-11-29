@@ -16,9 +16,6 @@ export function WalletConnectButton() {
         authenticationStatus,
         mounted,
       }) => {
-        // Note: If your app doesn't use authentication, you
-        // can ignore all `authenticationStatus` checks,
-        // and we'll skip the "not connected" state.
         const ready = mounted && authenticationStatus !== 'loading';
         const connected =
           ready &&
@@ -102,7 +99,7 @@ export function WalletConnectButton() {
                     className="font-mono text-xs border-border hover:bg-muted/50"
                   >
                     {account.displayName}
-                    {account.displayBalance
+                    {account.displayBalance && !account.displayBalance.includes('NaN')
                       ? ` (${account.displayBalance})`
                       : ''}
                   </Button>

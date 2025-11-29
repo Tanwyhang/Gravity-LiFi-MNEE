@@ -148,12 +148,17 @@ export function useLiFiPayment(
       let errorMessage = 'Payment failed. Please try again.';
       
       // Specific error handling
-      if (error.message?.includes('User rejected')) {
+      if (error.message?.includes('User rejected') || error.code === 'ACTION_REJECTED') {
         errorMessage = 'Transaction was rejected';
-      } else if (error.message?.includes('insufficient funds') || error.message?.includes('balance is too low')) {
-        errorMessage = 'Insufficient funds. Please check your token balance.';
+      } else if (
+        error.code === 'BalanceError' || 
+        error.message?.includes('insufficient funds') || 
+        error.message?.includes('balance is too low') ||
+        error.message?.includes('BalanceError')
+      ) {
+        errorMessage = `Insufficient funds. Please check your token balance.`;
       } else if (error.message?.includes('gas')) {
-        errorMessage = 'Gas estimation failed. Please try a smaller amount.';
+        errorMessage = 'Gas estimation failed. Please try a smaller amount or check your ETH balance for gas.';
       } else if (error.message) {
         errorMessage = error.message;
       }
