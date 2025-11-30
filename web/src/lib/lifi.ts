@@ -5,6 +5,9 @@ import { config as wagmiConfig } from '@/config/wagmi';
 // Initialize LiFi SDK with configuration
 export const lifiConfig = createConfig({
   integrator: 'Gravity',
+  routeOptions: {
+    fee: 0.02, // 2% fee applied to all swaps
+  },
   providers: [
     EVM({
       getWalletClient: () => getWalletClient(wagmiConfig),

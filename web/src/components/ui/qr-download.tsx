@@ -99,11 +99,11 @@ export const QRDownload: React.FC<QRDownloadProps> = ({
   return (
     <button
       onClick={handleDownload}
-      className={`hover:opacity-70 transition-opacity flex items-center justify-center gap-1 py-2 text-xs font-medium rounded animate-in fade-in duration-300 hover:scale-105 w-full ${className}`}
+      className={`hover:opacity-70 transition-opacity flex items-center justify-center gap-1 py-2 text-xs font-bold tracking-wider rounded animate-in fade-in duration-300 w-full ${className}`}
       style={style}
     >
       <Download className="w-3 h-3" />
-      DOWNLOAD_ETHERSCAN_QR
+      DOWNLOAD
     </button>
   );
 };

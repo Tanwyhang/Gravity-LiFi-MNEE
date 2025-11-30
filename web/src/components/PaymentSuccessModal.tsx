@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { X, Share2, CheckCircle } from 'lucide-react';
+import { X, Share2, CheckCircle, Copy, Check, Download } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -41,6 +41,7 @@ export function PaymentSuccessModal({
 }: PaymentSuccessModalProps) {
   const router = useRouter();
   const qrCodeRef = React.useRef<HTMLDivElement>(null);
+  const [copied, setCopied] = React.useState(false);
 
   // Default styles if config is missing
   const styles = {
@@ -51,17 +52,28 @@ export function PaymentSuccessModal({
     borderRadius: config?.borderRadius !== undefined ? `${config.borderRadius}px` : '0.75rem',
   };
 
-  // QR Code data with Etherscan link
-  const qrData = `https://etherscan.io/tx/0xcb875953793996431027da84f6905e7867f80f69481bb1790f7a678144e1158b`;
+  // QR Code data with actual Etherscan link using the txHash
+  const etherscanUrl = `https://etherscan.io/tx/${txHash}`;
+  const qrData = etherscanUrl;
 
   if (!isOpen) return null;
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(etherscanUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+    }
+  };
 
   const handleShare = async () => {
     try {
       const shareData = {
         title: 'Gravity Payment Successful',
         text: `Paid ${amountUSD} USD using Gravity Payment System`,
-        url: 'https://etherscan.io/tx/0xcb875953793996431027da84f6905e7867f80f69481bb1790f7a678144e1158b'
+        url: etherscanUrl
       };
 
       if (navigator.share) {
@@ -69,7 +81,6 @@ export function PaymentSuccessModal({
       } else {
         // Fallback: copy to clipboard
         await navigator.clipboard.writeText(`${shareData.text}\n${shareData.url}`);
-        // Toast notification would be shown here
       }
     } catch (error) {
       console.error('Error sharing:', error);
@@ -183,50 +194,52 @@ export function PaymentSuccessModal({
               >
                 <div className="w-full text-center">
                   <motion.div
-                    className="text-sm font-medium mb-3"
-                    style={{ color: styles.primaryColor, opacity: 0.8 }}
+                    className="text-xs font-bold mb-3 tracking-wider"
+                    style={{ color: styles.primaryColor, opacity: 0.7 }}
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.8 }}
+                    animate={{ opacity: 0.7 }}
                     transition={{ duration: 0.1, delay: 0.28 }}
                   >
-                    Etherscan Transaction QR Code
+                    [ SCAN_TO_VIEW_TRANSACTION ]
                   </motion.div>
                   <motion.div
-                    className="flex justify-center mb-3"
+                    className="flex justify-center mb-4"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.15, delay: 0.3 }}
                   >
                     <div
                       ref={qrCodeRef}
-                      className="w-48 h-48 rounded-lg overflow-hidden border-2"
+                      className="p-4 rounded-lg border-2"
                       style={{
                         backgroundColor: '#ffffff',
                         borderColor: styles.primaryColor
                       }}
                     >
-                      <QRCode
-                        data={qrData}
-                        foreground="#000000"
-                        background="#ffffff"
-                        robustness="L"
-                      />
+                      <div className="w-48 h-48">
+                        <QRCode
+                          data={qrData}
+                          foreground="#000000"
+                          background="#ffffff"
+                          robustness="L"
+                        />
+                      </div>
                     </div>
                   </motion.div>
                   <motion.p
-                    className="text-xs"
+                    className="text-xs mb-4"
                     style={{ color: styles.textColor, opacity: 0.6 }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.6 }}
                     transition={{ duration: 0.1, delay: 0.32 }}
                   >
-                    Scan to view transaction on Etherscan
+                    Scan to view on Etherscan
                   </motion.p>
                 </div>
 
                 {/* Action Buttons */}
                 <motion.div
-                  className="flex gap-2 w-full"
+                  className="grid grid-cols-3 gap-2 w-full"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.15, delay: 0.34 }}
@@ -236,7 +249,7 @@ export function PaymentSuccessModal({
                     transactionHash={txHash}
                     amount={amountUSD}
                     tokenSymbol={tokenSymbol}
-                    className="flex-1"
+                    className="flex items-center justify-center gap-1 h-10 rounded text-xs font-bold tracking-wider hover:opacity-80 transition-opacity"
                     style={{
                       backgroundColor: `${styles.primaryColor}15`,
                       color: styles.primaryColor,
@@ -246,15 +259,37 @@ export function PaymentSuccessModal({
                   />
 
                   <Button
+                    onClick={handleCopyLink}
+                    className="flex items-center justify-center gap-1 h-10 text-xs font-bold tracking-wider hover:opacity-80 transition-opacity"
+                    style={{
+                      backgroundColor: copied ? `${styles.primaryColor}30` : `${styles.primaryColor}15`,
+                      color: styles.primaryColor,
+                      border: `1px solid ${styles.primaryColor}30`
+                    }}
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="w-3 h-3" />
+                        COPIED
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3" />
+                        COPY
+                      </>
+                    )}
+                  </Button>
+
+                  <Button
                     onClick={handleShare}
-                    className="flex-1 h-10"
+                    className="flex items-center justify-center gap-1 h-10 text-xs font-bold tracking-wider hover:opacity-80 transition-opacity"
                     style={{
                       backgroundColor: `${styles.primaryColor}15`,
                       color: styles.primaryColor,
                       border: `1px solid ${styles.primaryColor}30`
                     }}
                   >
-                    <Share2 className="w-3 h-3 mr-1" />
+                    <Share2 className="w-3 h-3" />
                     SHARE
                   </Button>
                 </motion.div>
@@ -277,10 +312,10 @@ export function PaymentSuccessModal({
                       {txHash.slice(0, 10)}...{txHash.slice(-8)}
                     </div>
                     <a
-                      href="https://etherscan.io/tx/0xcb875953793996431027da84f6905e7867f80f69481bb1790f7a678144e1158b"
+                      href={etherscanUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs underline"
+                      className="text-xs underline hover:opacity-70 transition-opacity"
                       style={{ color: styles.primaryColor, opacity: 0.8 }}
                     >
                       View on Etherscan
